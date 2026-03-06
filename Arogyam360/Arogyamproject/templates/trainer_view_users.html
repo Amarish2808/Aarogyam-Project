@@ -1,0 +1,166 @@
+{% include 'trainer_header.html' %}
+
+<style>
+
+/* Page */
+.members-page{
+    padding:110px 0 80px;
+    background:#f4f6f9;
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+}
+
+.members-container{
+    width:92%;
+    max-width:1200px;
+    margin:auto;
+}
+
+/* Title */
+.section-label{
+    display:inline-block;
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:#888;
+    margin-bottom:.4rem;
+}
+
+.section-heading{
+    font-size:2rem;
+    font-weight:800;
+    color:#111;
+    margin:0 0 .4rem;
+}
+
+.section-divider{
+    width:48px;
+    height:3px;
+    background:#111;
+    border-radius:2px;
+    margin-bottom:2rem;
+}
+
+/* Card */
+.card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 8px 28px rgba(0,0,0,0.08);
+    overflow:hidden;
+}
+
+/* Header strip */
+.card-header{
+    background:linear-gradient(135deg,#111,#2f2f2f);
+    color:#fff;
+    padding:20px 28px;
+    font-weight:700;
+    font-size:1.05rem;
+}
+
+/* Table */
+.table-responsive{overflow-x:auto;}
+
+.members-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.members-table thead tr{
+    background:#f1f5f9;
+}
+
+.members-table th{
+    padding:14px 18px;
+    text-align:left;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    color:#64748b;
+    font-weight:700;
+}
+
+.members-table td{
+    padding:16px 18px;
+    border-top:1px solid #edf2f7;
+    font-size:.92rem;
+    color:#0f172a;
+    font-weight:500;
+}
+
+.members-table tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* Empty */
+.empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:#94a3b8;
+    font-size:.95rem;
+    font-weight:600;
+}
+
+@media(max-width:768px){
+    .section-heading{font-size:1.5rem;}
+}
+
+</style>
+
+
+<div class="members-page">
+<div class="members-container">
+
+    <span class="section-label">Members</span>
+    <h2 class="section-heading">Gym Members</h2>
+    <div class="section-divider"></div>
+
+    <div class="card">
+
+        <div class="card-header">
+            Approved users of your gym
+        </div>
+
+        <div class="table-responsive">
+
+        {% if users %}
+        <table class="members-table">
+
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Address</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.USERPROFILE.name }}</td>
+                <td>{{ u.USERPROFILE.email }}</td>
+                <td>{{ u.USERPROFILE.phone }}</td>
+                <td>{{ u.USERPROFILE.gender }}</td>
+                <td>{{ u.USERPROFILE.age }}</td>
+                <td>{{ u.USERPROFILE.place }}, {{ u.USERPROFILE.address }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+        {% else %}
+        <div class="empty-state">No Members Joined Yet</div>
+        {% endif %}
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% include 'trainer_footer.html' %}

@@ -1,0 +1,792 @@
+{#{% include 'trainer_header.html' %}#}
+{##}
+{#<style>#}
+{##}
+{#/* Page */#}
+{#.plan-page{#}
+{#    padding:110px 0 80px;#}
+{#    background:#f4f6f9;#}
+{#    min-height:100vh;#}
+{#    font-family:'Poppins',sans-serif;#}
+{#}#}
+{##}
+{#.container{#}
+{#    width:92%;#}
+{#    max-width:1050px;#}
+{#    margin:auto;#}
+{#}#}
+{##}
+{#/* Title */#}
+{#.section-label{#}
+{#    display:inline-block;#}
+{#    font-size:.78rem;#}
+{#    font-weight:700;#}
+{#    text-transform:uppercase;#}
+{#    letter-spacing:2px;#}
+{#    color:#888;#}
+{#    margin-bottom:.4rem;#}
+{#}#}
+{##}
+{#.section-heading{#}
+{#    font-size:2rem;#}
+{#    font-weight:800;#}
+{#    color:#111;#}
+{#    margin:0 0 .4rem;#}
+{#}#}
+{##}
+{#.section-divider{#}
+{#    width:48px;#}
+{#    height:3px;#}
+{#    background:#111;#}
+{#    border-radius:2px;#}
+{#    margin-bottom:2rem;#}
+{#}#}
+{##}
+{#/* Card */#}
+{#.card{#}
+{#    background:#fff;#}
+{#    border-radius:16px;#}
+{#    box-shadow:0 10px 35px rgba(0,0,0,0.08);#}
+{#    overflow:hidden;#}
+{#    margin-bottom:2rem;#}
+{#}#}
+{##}
+{#/* Header strip */#}
+{#.card-header{#}
+{#    background:linear-gradient(135deg,#111,#2f2f2f);#}
+{#    color:#fff;#}
+{#    padding:18px 24px;#}
+{#    font-weight:700;#}
+{#    font-size:1.05rem;#}
+{#}#}
+{##}
+{#/* Form */#}
+{#.form-body{#}
+{#    padding:24px;#}
+{#}#}
+{##}
+{#select,input,textarea{#}
+{#    width:100%;#}
+{#    padding:.75rem 1rem;#}
+{#    margin-bottom:14px;#}
+{#    border-radius:10px;#}
+{#    border:1.5px solid #e2e8f0;#}
+{#    background:#f8fafc;#}
+{#    font-family:'Poppins',sans-serif;#}
+{#    font-size:.9rem;#}
+{#    outline:none;#}
+{#    transition:.2s;#}
+{#}#}
+{##}
+{#select:focus,input:focus,textarea:focus{#}
+{#    border-color:#111;#}
+{#    background:#fff;#}
+{#    box-shadow:0 0 0 3px rgba(17,17,17,.08);#}
+{#}#}
+{##}
+{#textarea{#}
+{#    resize:none;#}
+{#    height:120px;#}
+{#}#}
+{##}
+{#button{#}
+{#    width:100%;#}
+{#    padding:.8rem;#}
+{#    background:linear-gradient(135deg,#111,#2d2d2d);#}
+{#    color:#fff;#}
+{#    border:none;#}
+{#    border-radius:10px;#}
+{#    font-weight:600;#}
+{#    cursor:pointer;#}
+{#    transition:.25s;#}
+{#}#}
+{##}
+{#button:hover{#}
+{#    transform:translateY(-2px);#}
+{#    box-shadow:0 6px 20px rgba(0,0,0,.18);#}
+{#}#}
+{##}
+{#/* Table */#}
+{#.table-responsive{overflow-x:auto;}#}
+{##}
+{#table{#}
+{#    width:100%;#}
+{#    border-collapse:collapse;#}
+{#}#}
+{##}
+{#thead tr{#}
+{#    background:#f1f5f9;#}
+{#}#}
+{##}
+{#th{#}
+{#    padding:14px 18px;#}
+{#    text-align:left;#}
+{#    font-size:.72rem;#}
+{#    text-transform:uppercase;#}
+{#    letter-spacing:.7px;#}
+{#    color:#64748b;#}
+{#    font-weight:700;#}
+{#}#}
+{##}
+{#td{#}
+{#    padding:16px 18px;#}
+{#    border-top:1px solid #edf2f7;#}
+{#    font-size:.92rem;#}
+{#    color:#0f172a;#}
+{#    font-weight:500;#}
+{#}#}
+{##}
+{#tbody tr:hover{background:#f8fafc;}#}
+{##}
+{#/* Buttons */#}
+{#.btn-edit,.btn-delete{#}
+{#    padding:6px 12px;#}
+{#    border-radius:8px;#}
+{#    text-decoration:none;#}
+{#    font-size:.78rem;#}
+{#    font-weight:600;#}
+{#    margin-right:6px;#}
+{#}#}
+{##}
+{#.btn-edit{#}
+{#    background:#dcfce7;#}
+{#    color:#15803d;#}
+{#    border:1px solid #bbf7d0;#}
+{#}#}
+{##}
+{#.btn-edit:hover{#}
+{#    background:#15803d;#}
+{#    color:#fff;#}
+{#}#}
+{##}
+{#.btn-delete{#}
+{#    background:#fee2e2;#}
+{#    color:#b91c1c;#}
+{#    border:1px solid #fecaca;#}
+{#}#}
+{##}
+{#.btn-delete:hover{#}
+{#    background:#b91c1c;#}
+{#    color:#fff;#}
+{#}#}
+{##}
+{#</style>#}
+{##}
+{##}
+{#<div class="plan-page">#}
+{#<div class="container">#}
+{##}
+{#    <span class="section-label">Training</span>#}
+{#    <h2 class="section-heading">Daily Exercise Plans</h2>#}
+{#    <div class="section-divider"></div>#}
+{##}
+{#    <!-- Add Plan -->#}
+{#    <div class="card">#}
+{#        <div class="card-header">Add Daily Exercise Plan</div>#}
+{#        <div class="form-body">#}
+{##}
+{#            <form method="post">#}
+{#                {% csrf_token %}#}
+{##}
+{#                <select name="level" required>#}
+{#                    <option value="">-- Select Workout Level --</option>#}
+{#                    {% for level in workoutlevels %}#}
+{#                        <option value="{{ level.id }}">{{ level.title }}</option>#}
+{#                    {% endfor %}#}
+{#                </select>#}
+{##}
+{#                <select name="date" required>#}
+{#                    <option value="">-- Select Day --</option>#}
+{#                    <option value="Monday">Monday</option>#}
+{#                    <option value="Tuesday">Tuesday</option>#}
+{#                    <option value="Wednesday">Wednesday</option>#}
+{#                    <option value="Thursday">Thursday</option>#}
+{#                    <option value="Friday">Friday</option>#}
+{#                    <option value="Saturday">Saturday</option>#}
+{#                </select>#}
+{##}
+{#                <textarea name="plantext" placeholder="Enter daily exercise plan details" required></textarea>#}
+{##}
+{#                <button type="submit">Upload Exercise Plan</button>#}
+{#            </form>#}
+{##}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#    <!-- Plan List -->#}
+{#    <div class="card">#}
+{#        <div class="card-header">Weekly Plans</div>#}
+{##}
+{#        <div class="table-responsive">#}
+{#        <table>#}
+{##}
+{#            <thead>#}
+{#            <tr>#}
+{#                <th>Workout Level</th>#}
+{#                <th>Day</th>#}
+{#                <th>Plan</th>#}
+{#                <th>Action</th>#}
+{#            </tr>#}
+{#            </thead>#}
+{##}
+{#            <tbody>#}
+{#            {% for p in plans %}#}
+{#            <tr>#}
+{#                <td>{{ p.WORKOUTLEVEL.title }}</td>#}
+{#                <td>{{ p.date }}</td>#}
+{#                <td>{{ p.plantext }}</td>#}
+{#                <td>#}
+{#                    <a href="/trainer_edit_dailyexerciseplan/{{p.id}}/" class="btn-edit">Edit</a>#}
+{#                    <a href="/trainer_delete_dailyexerciseplan/{{p.id}}/" class="btn-delete">Delete</a>#}
+{#                </td>#}
+{#            </tr>#}
+{#            {% endfor %}#}
+{#            </tbody>#}
+{##}
+{#        </table>#}
+{#        </div>#}
+{#    </div>#}
+{##}
+{#</div>#}
+{#</div>#}
+{##}
+{#{% include 'trainer_footer.html' %}#}
+
+
+
+
+
+{% include 'trainer_header.html' %}
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#f4f6f9;
+    --white:#ffffff;
+    --dark:#111111;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --card-shadow:0 8px 40px rgba(0,0,0,0.09);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'DM Sans',sans-serif; }
+
+.plan-page{
+    padding:100px 0 80px;
+    background:var(--bg);
+    min-height:100vh;
+}
+
+.container{
+    width:92%;
+    max-width:1100px;
+    margin:auto;
+}
+
+/* ── Page Title ── */
+.page-top{ margin-bottom:2.2rem; }
+
+.page-top .eyebrow{
+    font-family:'Syne',sans-serif;
+    font-size:.72rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dark);
+    margin-bottom:.5rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.page-top .eyebrow::before{
+    content:'';
+    display:inline-block;
+    width:20px; height:2px;
+    background:var(--dark);
+    border-radius:2px;
+}
+
+.page-top h1{
+    font-family:'Syne',sans-serif;
+    font-size:2.2rem;
+    font-weight:800;
+    color:var(--dark);
+    line-height:1.1;
+}
+
+/* ── Card ── */
+.card{
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:var(--card-shadow);
+    overflow:hidden;
+    margin-bottom:2rem;
+    border:1px solid rgba(255,255,255,0.9);
+    animation:fadeUp .4s ease both;
+}
+
+.card:nth-child(2){ animation-delay:.1s; }
+
+@keyframes fadeUp{
+    from{ opacity:0; transform:translateY(20px); }
+    to{   opacity:1; transform:translateY(0); }
+}
+
+.card-header{
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    color:#fff;
+    padding:18px 28px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Syne',sans-serif;
+    font-size:1rem;
+    font-weight:700;
+    letter-spacing:.3px;
+}
+
+.card-header .dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:#fff;
+    opacity:.6;
+}
+
+.form-body{ padding:30px 32px; }
+
+/* ── Field Label ── */
+.field-label{
+    font-family:'Syne',sans-serif;
+    font-size:.7rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:var(--muted);
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.field-label span{
+    display:inline-block;
+    width:16px; height:2px;
+    background:var(--dark);
+    border-radius:2px;
+}
+
+.form-divider{
+    border:none;
+    border-top:1.5px solid #f1f5f9;
+    margin:4px 0 28px;
+}
+
+/* ── LEVEL PILLS ── */
+.level-group{
+    display:flex;
+    gap:10px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+}
+
+.level-btn{
+    flex:1 1 0;
+    min-width:120px;
+    padding:13px 16px;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:#fafbff;
+    font-family:'Syne',sans-serif;
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--muted);
+    cursor:pointer;
+    transition:all .22s ease;
+    user-select:none;
+    text-align:center;
+}
+
+.level-btn:hover{
+    border-color:var(--dark);
+    color:var(--dark);
+    transform:translateY(-2px);
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
+}
+
+.level-btn.selected{
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    color:#fff;
+    border-color:transparent;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+    transform:translateY(-2px);
+}
+
+/* ── 2-COLUMN LAYOUT ── */
+.form-columns{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:24px;
+    align-items:start;
+}
+
+@media(max-width:680px){
+    .form-columns{ grid-template-columns:1fr; }
+}
+
+/* ── DAY COLUMN ── */
+.day-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.day-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:#fafbff;
+    font-family:'DM Sans',sans-serif;
+    font-size:.88rem;
+    font-weight:600;
+    color:#475569;
+    cursor:pointer;
+    transition:all .2s ease;
+    user-select:none;
+}
+
+.day-btn .day-abbr{
+    font-family:'Syne',sans-serif;
+    font-size:.72rem;
+    font-weight:800;
+    color:var(--dark);
+    background:rgba(0,0,0,.07);
+    border-radius:6px;
+    padding:3px 7px;
+    min-width:36px;
+    text-align:center;
+    transition:.2s;
+    letter-spacing:.5px;
+}
+
+.day-btn:hover{
+    border-color:var(--dark);
+    color:var(--dark);
+    transform:translateX(3px);
+    box-shadow:0 3px 14px rgba(0,0,0,.12);
+}
+
+.day-btn.selected{
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    border-color:transparent;
+    color:#fff;
+    transform:translateX(3px);
+    box-shadow:0 5px 18px rgba(0,0,0,.22);
+}
+
+.day-btn.selected .day-abbr{
+    background:rgba(255,255,255,.15);
+    color:#fff;
+}
+
+/* ── RIGHT COLUMN ── */
+.fields-col{
+    display:flex;
+    flex-direction:column;
+}
+
+.styled-textarea{
+    width:100%;
+    padding:.85rem 1.1rem;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:#fafbff;
+    font-family:'DM Sans',sans-serif;
+    font-size:.92rem;
+    font-weight:500;
+    color:var(--dark);
+    outline:none;
+    transition:all .2s;
+    resize:none;
+    height:220px;
+}
+
+.styled-textarea:focus{
+    border-color:var(--dark);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(0,0,0,.08);
+}
+
+.styled-textarea::placeholder{
+    color:#b0bec5;
+    font-weight:400;
+}
+
+/* ── Submit ── */
+.submit-wrap{
+    margin-top:28px;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.submit-btn{
+    padding:13px 40px;
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-family:'Syne',sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    transition:.25s;
+    letter-spacing:.5px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(0,0,0,.22);
+}
+
+.submit-btn .arrow{
+    font-size:1rem;
+    transition:transform .2s;
+}
+
+.submit-btn:hover .arrow{ transform:translateX(4px); }
+
+/* ── Table ── */
+.table-responsive{ overflow-x:auto; }
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead tr{ background:linear-gradient(90deg,#f8faff,#f1f5f9); }
+
+th{
+    padding:14px 20px;
+    text-align:left;
+    font-family:'Syne',sans-serif;
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:1.2px;
+    color:var(--muted);
+    font-weight:700;
+}
+
+td{
+    padding:16px 20px;
+    border-top:1px solid #f1f5f9;
+    font-size:.9rem;
+    color:#1e293b;
+    font-weight:500;
+}
+
+tbody tr{ transition:.15s; }
+tbody tr:hover{ background:#f8faff; }
+
+.badge-level{
+    display:inline-block;
+    padding:4px 12px;
+    border-radius:50px;
+    font-size:.72rem;
+    font-weight:700;
+    font-family:'Syne',sans-serif;
+    background:rgba(0,0,0,.07);
+    color:var(--dark);
+    letter-spacing:.3px;
+}
+
+.badge-day{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:7px;
+    font-size:.72rem;
+    font-weight:700;
+    font-family:'Syne',sans-serif;
+    background:#f1f5f9;
+    color:#1e293b;
+}
+
+.plan-text{
+    max-width:340px;
+    color:var(--muted);
+    font-weight:400;
+    font-size:.88rem;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.btn-edit,.btn-delete{
+    padding:6px 14px;
+    border-radius:8px;
+    text-decoration:none;
+    font-size:.75rem;
+    font-family:'Syne',sans-serif;
+    font-weight:700;
+    margin-right:6px;
+    transition:.18s;
+    display:inline-block;
+}
+
+.btn-edit{
+    background:#ecfdf5;
+    color:#059669;
+    border:1.5px solid #a7f3d0;
+}
+
+.btn-edit:hover{ background:#059669; color:#fff; border-color:#059669; }
+
+.btn-delete{
+    background:#fef2f2;
+    color:#dc2626;
+    border:1.5px solid #fecaca;
+}
+
+.btn-delete:hover{ background:#dc2626; color:#fff; border-color:#dc2626; }
+
+</style>
+
+
+<div class="plan-page">
+<div class="container">
+
+    <div class="page-top">
+        <div class="eyebrow">Training</div>
+        <h1>Daily Exercise Plans</h1>
+    </div>
+
+    <!-- Add Plan Card -->
+    <div class="card">
+        <div class="card-header">
+            <div class="dot"></div>
+            Add Daily Exercise Plan
+        </div>
+        <div class="form-body">
+
+            <form method="post" id="planForm">
+                {% csrf_token %}
+                <input type="hidden" name="level" id="selectedLevel">
+                <input type="hidden" name="date"  id="selectedDay">
+
+                <!-- LEVEL PILLS -->
+                <div class="field-label"><span></span> Workout Level</div>
+                <div class="level-group">
+                    {% for level in workoutlevels %}
+                    <div class="level-btn" data-value="{{ level.id }}" onclick="selectLevel(this)">
+                        {{ level.title }}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <hr class="form-divider">
+
+                <!-- DAYS + PLAN TEXT -->
+                <div class="form-columns">
+
+                    <!-- LEFT: Days -->
+                    <div>
+                        <div class="field-label"><span></span> Select Day</div>
+                        <div class="day-group">
+                            <div class="day-btn" data-value="Monday"    onclick="selectDay(this)"><span class="day-abbr">MON</span> Monday</div>
+                            <div class="day-btn" data-value="Tuesday"   onclick="selectDay(this)"><span class="day-abbr">TUE</span> Tuesday</div>
+                            <div class="day-btn" data-value="Wednesday" onclick="selectDay(this)"><span class="day-abbr">WED</span> Wednesday</div>
+                            <div class="day-btn" data-value="Thursday"  onclick="selectDay(this)"><span class="day-abbr">THU</span> Thursday</div>
+                            <div class="day-btn" data-value="Friday"    onclick="selectDay(this)"><span class="day-abbr">FRI</span> Friday</div>
+                            <div class="day-btn" data-value="Saturday"  onclick="selectDay(this)"><span class="day-abbr">SAT</span> Saturday</div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Plan Text -->
+                    <div class="fields-col">
+                        <div class="field-label"><span></span> Exercise Plan Details</div>
+                        <textarea class="styled-textarea" name="plantext" placeholder="Enter daily exercise plan details — exercises, sets, reps, duration, rest periods..." required></textarea>
+                    </div>
+
+                </div>
+
+                <div class="submit-wrap">
+                    <button type="submit" class="submit-btn">
+                        <span>Upload Exercise Plan</span>
+                        <span class="arrow">→</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- Plan List Card -->
+    <div class="card">
+        <div class="card-header">
+            <div class="dot"></div>
+            Weekly Plans
+        </div>
+        <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th>Workout Level</th>
+                <th>Day</th>
+                <th>Plan</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in plans %}
+            <tr>
+                <td><span class="badge-level">{{ p.WORKOUTLEVEL.title }}</span></td>
+                <td><span class="badge-day">{{ p.date }}</span></td>
+                <td><div class="plan-text">{{ p.plantext }}</div></td>
+                <td>
+                    <a href="/trainer_edit_dailyexerciseplan/{{p.id}}/"   class="btn-edit">Edit</a>
+                    <a href="/trainer_delete_dailyexerciseplan/{{p.id}}/" class="btn-delete">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+function selectLevel(el){
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('selectedLevel').value = el.dataset.value;
+}
+
+function selectDay(el){
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('selectedDay').value = el.dataset.value;
+}
+
+document.getElementById('planForm').addEventListener('submit', function(e){
+    if(!document.getElementById('selectedLevel').value){
+        alert('Please select a Workout Level.');
+        e.preventDefault(); return;
+    }
+    if(!document.getElementById('selectedDay').value){
+        alert('Please select a Day.');
+        e.preventDefault(); return;
+    }
+});
+</script>
+
+{% include 'trainer_footer.html' %}

@@ -1,0 +1,766 @@
+{% include 'gymowner_header.html' %}
+
+<style>
+    /* ── Page wrapper ── */
+    .edit-page {
+        padding: 120px 0 80px;
+        background: #f4f6f9;
+        min-height: 100vh;
+    }
+
+    .edit-container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* ── Section title ── */
+    .section-label {
+        display: inline-block;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #888;
+        margin-bottom: 0.4rem;
+    }
+
+    .section-heading {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #111;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.4rem;
+    }
+
+    .section-divider {
+        width: 48px;
+        height: 3px;
+        background: #111;
+        border-radius: 2px;
+        margin-bottom: 2.5rem;
+    }
+
+    /* ── Card ── */
+    .edit-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+    }
+
+    /* Hero strip */
+    .edit-hero {
+        background: linear-gradient(135deg, #111 0%, #333 100%);
+        padding: 2rem 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .edit-hero::before {
+        content: '';
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+    }
+
+    .edit-hero-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .edit-hero-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.12);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .edit-hero-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #fff;
+        margin: 0 0 0.2rem;
+    }
+
+    .edit-hero-sub {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ── Form body ── */
+    .edit-body {
+        padding: 2.5rem;
+    }
+
+    /* Two-column grid */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .form-label i {
+        font-size: 0.82rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.72rem 1rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.88rem;
+        color: #1e293b;
+        background: #f8fafc;
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        box-sizing: border-box;
+    }
+
+    .form-input:focus {
+        border-color: #111;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.08);
+    }
+
+    .form-input.error {
+        border-color: #ef4444;
+        background: #fff5f5;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+
+    .form-input.success {
+        border-color: #22c55e;
+        background: #f0fdf4;
+    }
+
+    textarea.form-input {
+        min-height: 120px;
+        line-height: 1.5;
+    }
+
+    /* Error message */
+    .field-error {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.72rem;
+        color: #ef4444;
+        font-weight: 500;
+        display: none;
+        align-items: center;
+        gap: 0.3rem;
+        margin-top: 0.1rem;
+    }
+
+    .field-error.visible {
+        display: flex;
+    }
+
+    /* File input */
+    .file-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-input[type="file"] {
+        padding: 0.6rem 1rem;
+        border-style: dashed;
+        cursor: pointer;
+        color: #64748b;
+    }
+
+    .form-input[type="file"]:hover {
+        border-color: #111;
+        background: #fff;
+    }
+
+    .form-input[type="file"].error {
+        border-color: #ef4444;
+        background: #fff5f5;
+    }
+
+    .current-file-link {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        color: #64748b;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .current-file-link a {
+        color: #1e293b;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.2rem 0.6rem;
+        background: #e2e8f0;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        transition: all 0.2s ease;
+    }
+
+    .current-file-link a:hover {
+        background: #111;
+        color: #fff;
+    }
+
+    /* Image preview */
+    .image-preview-wrap {
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+    }
+
+    .image-preview-wrap.visible {
+        display: flex;
+    }
+
+    .image-preview-wrap img {
+        width: 52px;
+        height: 52px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 2px solid #e2e8f0;
+    }
+
+    .image-preview-name {
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.78rem;
+        color: #22c55e;
+        font-weight: 600;
+    }
+
+    /* ── Divider ── */
+    .form-divider {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 0.5rem 0 1.75rem;
+    }
+
+    /* ── Actions ── */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-save {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.72rem 2rem;
+        background: #111;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        letter-spacing: 0.01em;
+    }
+
+    .btn-save:hover {
+        background: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-cancel {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.72rem 1.5rem;
+        background: #f1f5f9;
+        color: #64748b;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 10px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+
+    .btn-cancel:hover {
+        background: #e2e8f0;
+        color: #1e293b;
+        transform: translateY(-2px);
+    }
+
+    /* Toast notification */
+    .toast-error {
+        position: fixed;
+        top: 90px;
+        right: 24px;
+        background: #1e293b;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.9rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        z-index: 9999;
+        transform: translateX(120%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast-error.show {
+        transform: translateX(0);
+    }
+
+    .toast-error .toast-icon {
+        color: #ef4444;
+        font-size: 1rem;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 600px) {
+        .edit-page {
+            padding: 100px 0 60px;
+        }
+
+        .edit-body {
+            padding: 1.5rem;
+        }
+
+        .edit-hero {
+            padding: 1.75rem 1.5rem;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+            grid-column: 1;
+        }
+
+        .section-heading {
+            font-size: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-save, .btn-cancel {
+            justify-content: center;
+        }
+    }
+</style>
+
+<!-- Toast -->
+<div class="toast-error" id="toast">
+    <i class="bi bi-exclamation-circle-fill toast-icon"></i>
+    <span id="toastMsg">Please fix the errors before submitting.</span>
+</div>
+
+<div class="edit-page">
+    <div class="edit-container">
+
+        <!-- Section title -->
+        <div data-aos="fade-up" data-aos-delay="100">
+            <span class="section-label">Account</span>
+            <h2 class="section-heading">Edit Profile</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <!-- Edit card -->
+        <div class="edit-card" data-aos="fade-up" data-aos-delay="200">
+
+            <!-- Hero strip -->
+            <div class="edit-hero">
+                <div class="edit-hero-inner">
+                    <div class="edit-hero-icon">
+                        <i class="bi bi-pencil-square"></i>
+                    </div>
+                    <div>
+                        <div class="edit-hero-title">Update Your Details</div>
+                        <div class="edit-hero-sub">All fields are required unless marked optional</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form body -->
+            <div class="edit-body">
+                <form method="POST" enctype="multipart/form-data" id="editForm" novalidate>
+                    {% csrf_token %}
+
+                    <div class="form-grid">
+
+                        <!-- Name -->
+                        <div class="form-group">
+                            <label class="form-label" for="name">
+                                <i class="bi bi-person"></i> Full Name
+                            </label>
+                            <input type="text" id="name" name="name"
+                                   value="{{ gymowner.name }}" required
+                                   class="form-input" placeholder="Alphabets only"
+                                   autocomplete="name">
+                            <span class="field-error" id="nameErr">
+                <i class="bi bi-x-circle"></i> Name must contain alphabets only.
+              </span>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label class="form-label" for="phone">
+                                <i class="bi bi-telephone"></i> Phone Number
+                            </label>
+                            <input type="text" id="phone" name="phone"
+                                   value="{{ gymowner.phone }}" required
+                                   class="form-input" placeholder="10-digit number"
+                                   maxlength="10" inputmode="numeric">
+                            <span class="field-error" id="phoneErr">
+                <i class="bi bi-x-circle"></i> Phone must be exactly 10 digits.
+              </span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label class="form-label" for="email">
+                                <i class="bi bi-envelope"></i> Email Address
+                            </label>
+                            <input type="email" id="email" name="email"
+                                   value="{{ gymowner.email }}" required
+                                   class="form-input" placeholder="you@example.com"
+                                   autocomplete="email">
+                            <span class="field-error" id="emailErr">
+                <i class="bi bi-x-circle"></i> Enter a valid email address.
+              </span>
+                        </div>
+
+                        <!-- Place -->
+                        <div class="form-group">
+                            <label class="form-label" for="place">
+                                <i class="bi bi-geo-alt"></i> Place
+                            </label>
+                            <input type="text" id="place" name="place"
+                                   value="{{ gymowner.place }}" required
+                                   class="form-input" placeholder="City / Town">
+                            <span class="field-error" id="placeErr">
+                <i class="bi bi-x-circle"></i> Place is required.
+              </span>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group full-width">
+                            <label class="form-label" for="address">
+                                <i class="bi bi-map"></i> Address
+                            </label>
+                            <input type="text" id="address" name="address"
+                                   value="{{ gymowner.address }}" required
+                                   class="form-input" placeholder="Full address">
+                            <span class="field-error" id="addressErr">
+                <i class="bi bi-x-circle"></i> Address is required.
+              </span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-group full-width">
+                            <label class="form-label" for="description">
+                                <i class="bi bi-card-text"></i> Description
+                            </label>
+                            <textarea id="description"
+                                      name="description"
+                                      rows="4"
+                                      required
+                                      class="form-input"
+                                      placeholder="Describe your gym facilities, trainers, equipment, timings, etc."
+                                      style="resize: vertical;">{{ gymowner.description }}</textarea>
+
+                            <span class="field-error" id="descriptionErr">
+    <i class="bi bi-x-circle"></i> Description must be at least 20 characters.
+  </span>
+                        </div>
+
+                        <!-- Monthly Fee -->
+                        <div class="form-group">
+                            <label class="form-label" for="fees">
+                                <i class="bi bi-cash-coin"></i> Monthly Fee (₹)
+                            </label>
+                            <input type="text" id="fees" name="fees"
+                                   value="{{ gymowner.fees }}" required
+                                   class="form-input" placeholder="e.g. 1500"
+                                   inputmode="numeric">
+                            <span class="field-error" id="feesErr">
+                <i class="bi bi-x-circle"></i> Enter a valid fee amount.
+              </span>
+                        </div>
+
+                        <!-- ID Proof -->
+                        <div class="form-group">
+                            <label class="form-label" for="idproof">
+                                <i class="bi bi-file-earmark-text"></i> ID Proof
+                                <span style="font-weight:400; text-transform:none; letter-spacing:0; color:#94a3b8;">(optional)</span>
+                            </label>
+                            <div class="file-wrapper">
+                                <input type="file" id="idproof" name="idproof" class="form-input"
+                                       accept=".pdf,.jpg,.jpeg,.png">
+                                <span class="current-file-link">
+                  Current:&nbsp;
+                  <a href="{{ gymowner.idproof.url }}" target="_blank">
+                    <i class="bi bi-eye"></i> View file
+                  </a>
+                </span>
+                            </div>
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="form-group">
+                            <label class="form-label" for="image">
+                                <i class="bi bi-person-circle"></i> Profile Image
+                                <span style="font-weight:400; text-transform:none; letter-spacing:0; color:#94a3b8;">(optional)</span>
+                            </label>
+                            <div class="file-wrapper">
+                                <input type="file" id="image" name="image" class="form-input"
+                                       accept=".jpg,.jpeg,.png" onchange="handleImageChange(this)">
+                                <span class="field-error" id="imageErr" style="margin-top:0;">
+                  <i class="bi bi-x-circle"></i> Only JPG and PNG files are allowed.
+                </span>
+                                <!-- New image preview -->
+                                <div class="image-preview-wrap" id="imagePreviewWrap">
+                                    <img id="imagePreview" src="" alt="Preview">
+                                    <span class="image-preview-name" id="imagePreviewName"></span>
+                                </div>
+                                <!-- Current image -->
+                                {% if gymowner.image %}
+                                    <span class="current-file-link">
+                  Current:&nbsp;
+                  <a href="{{ gymowner.image.url }}" target="_blank">
+                    <i class="bi bi-eye"></i> View image
+                  </a>
+                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr class="form-divider">
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="bi bi-check-lg"></i> Update Profile
+                        </button>
+                        <a href="/gymowner_view_profile/" class="btn-cancel">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% include 'public_footer.html' %}
+
+<script>
+    const form = document.getElementById('editForm');
+    const toast = document.getElementById('toast');
+    const toastMsg = document.getElementById('toastMsg');
+
+    /* ── Regex rules ── */
+    const rules = {
+        name: {regex: /^[A-Za-z\s]+$/, errId: 'nameErr', msg: 'Name must contain alphabets only.'},
+        email: {regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, errId: 'emailErr', msg: 'Enter a valid email address.'},
+        phone: {regex: /^\d{10}$/, errId: 'phoneErr', msg: 'Phone must be exactly 10 digits.'},
+        place: {regex: /\S+/, errId: 'placeErr', msg: 'Place is required.'},
+        address: {regex: /\S+/, errId: 'addressErr', msg: 'Address is required.'},
+        fees: {regex: /^\d+(\.\d{1,2})?$/, errId: 'feesErr', msg: 'Enter a valid fee amount (numbers only).'},
+        description: {regex: /^.{20,}$/, errId: 'descriptionErr', msg: 'Description must be at least 20 characters.'},
+    };
+
+    /* ── Show / hide error ── */
+    function setError(input, errId, show) {
+        const errEl = document.getElementById(errId);
+        if (show) {
+            input.classList.add('error');
+            input.classList.remove('success');
+            errEl.classList.add('visible');
+        } else {
+            input.classList.remove('error');
+            input.classList.add('success');
+            errEl.classList.remove('visible');
+        }
+    }
+
+    /* ── Validate single field ── */
+    function validateField(fieldName) {
+        const rule = rules[fieldName];
+        if (!rule) return true;
+        const input = document.getElementById(fieldName);
+        const val = input.value.trim();
+        const ok = rule.regex.test(val);
+        setError(input, rule.errId, !ok);
+        return ok;
+    }
+
+    /* ── Real-time validation on blur / input ── */
+    Object.keys(rules).forEach(fieldName = > {
+        const input = document.getElementById(fieldName);
+    if (!input) return;
+    input.addEventListener('blur', () = > validateField(fieldName)
+    )
+    ;
+    input.addEventListener('input', () = > {
+        if (input.classList.contains('error')
+    )
+    validateField(fieldName);
+    })
+    ;
+    })
+    ;
+
+    /* ── Phone: only allow numeric input ── */
+    document.getElementById('phone').addEventListener('keypress', e = > {
+        if (
+    !/\d/.test(e.key)
+    )
+    e.preventDefault();
+    })
+    ;
+
+    /* ── Profile image handler ── */
+    function handleImageChange(input) {
+        const errEl = document.getElementById('imageErr');
+        const previewWrap = document.getElementById('imagePreviewWrap');
+        const previewImg = document.getElementById('imagePreview');
+        const previewName = document.getElementById('imagePreviewName');
+
+        errEl.classList.remove('visible');
+        input.classList.remove('error');
+        previewWrap.classList.remove('visible');
+
+        if (!input.files || input.files.length === 0) return;
+
+        const file = input.files[0];
+        const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+
+        if (!allowed.includes(file.type)) {
+            input.classList.add('error');
+            errEl.classList.add('visible');
+            input.value = '';
+            return;
+        }
+
+        /* Show preview */
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            previewImg.src = e.target.result;
+            previewName.textContent = file.name;
+            previewWrap.classList.add('visible');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    /* ── Validate image on submit ── */
+    function validateImage() {
+        const input = document.getElementById('image');
+        const errEl = document.getElementById('imageErr');
+        if (!input.files || input.files.length === 0) return true; // optional field
+        const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!allowed.includes(input.files[0].type)) {
+            input.classList.add('error');
+            errEl.classList.add('visible');
+            return false;
+        }
+        input.classList.remove('error');
+        errEl.classList.remove('visible');
+        return true;
+    }
+
+    /* ── Toast helper ── */
+    function showToast(msg) {
+        toastMsg.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() = > toast.classList.remove('show'), 3500
+    )
+        ;
+    }
+
+    /* ── Form submit ── */
+    form.addEventListener('submit', function (e) {
+        let valid = true;
+        const firstFail = [];
+
+        Object.keys(rules).forEach(fieldName = > {
+            const ok = validateField(fieldName);
+        if (!ok) {
+            valid = false;
+            firstFail.push(fieldName);
+        }
+    })
+        ;
+
+        const imageOk = validateImage();
+        if (!imageOk) {
+            valid = false;
+            if (firstFail.length === 0) firstFail.push('image');
+        }
+
+        if (!valid) {
+            e.preventDefault();
+            showToast('Please fix the highlighted fields before submitting.');
+            const el = document.getElementById(firstFail[0]);
+            if (el) el.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+    });
+</script>

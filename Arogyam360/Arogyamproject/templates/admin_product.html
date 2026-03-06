@@ -1,0 +1,696 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .admin-main {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 2rem;
+        transition: var(--transition);
+        min-height: calc(100vh - var(--header-height));
+        background: var(--bg-primary);
+    }
+
+    .admin-main.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* ── Page Banner ── */
+    .page-banner {
+        background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+        color: #000;
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 200px; height: 200px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 50%;
+        transform: translate(50%,-50%);
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: 40px;
+        width: 120px; height: 120px;
+        background: rgba(0,0,0,0.07);
+        border-radius: 50%;
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .banner-icon {
+        width: 60px; height: 60px;
+        background: rgba(0,0,0,0.15);
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+    }
+
+    .banner-title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    /* ── Two-column layout ── */
+    .page-grid {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    /* ── Card shell (shared) ── */
+    .card {
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .card-header i {
+        color: #888;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    /* ── Form ── */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1px solid var(--border-medium);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        transition: var(--transition);
+        font-family: inherit;
+        outline: none;
+    }
+
+    .form-control:focus {
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.12);
+    }
+
+    .form-control::placeholder { color: var(--text-muted); }
+
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+    }
+
+    .file-input-wrapper input[type="file"] {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        border: 1px dashed var(--border-medium);
+        border-radius: 10px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        background: var(--bg-primary);
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        outline: none;
+    }
+
+    .file-input-wrapper input[type="file"]:hover {
+        border-color: #888;
+        background: #fff;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.8rem;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    /* ── Messages ── */
+    .messages-box {
+        margin-top: 1rem;
+    }
+
+    .message-item {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 0.88rem;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    /* ── Table section ── */
+    .table-section-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .table-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .table-title i { color: #888; }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg-secondary);
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-light);
+        transition: var(--transition);
+    }
+
+    .search-box:focus-within {
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.1);
+    }
+
+    .search-box i { color: var(--text-muted); font-size: 0.9rem; }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        width: 180px;
+    }
+
+    .search-box input::placeholder { color: var(--text-muted); }
+
+    .table-responsive { overflow-x: auto; }
+
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .products-table thead tr {
+        background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+
+    .products-table thead th {
+        padding: 1rem 1.25rem;
+        color: rgba(255,255,255,0.9);
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .products-table tbody tr {
+        border-bottom: 1px solid var(--border-light);
+        transition: var(--transition);
+    }
+
+    .products-table tbody tr:last-child { border-bottom: none; }
+
+    .products-table tbody tr:hover { background: #f8fafc; }
+
+    .products-table tbody td {
+        padding: 1rem 1.25rem;
+        font-size: 0.88rem;
+        color: var(--text-primary);
+        vertical-align: middle;
+    }
+
+    .product-thumb {
+        width: 52px; height: 52px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--border-light);
+    }
+
+    .no-image {
+        width: 52px; height: 52px;
+        border-radius: 10px;
+        background: var(--bg-secondary);
+        display: flex; align-items: center; justify-content: center;
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        border: 1px solid var(--border-light);
+    }
+
+    .category-pill {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        background: #f1f5f9;
+        color: var(--text-secondary);
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid var(--border-light);
+    }
+
+    .view-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: #333;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.82rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-medium);
+        transition: var(--transition);
+    }
+
+    .view-link:hover {
+        background: #1a1a1a;
+        color: white;
+        border-color: #1a1a1a;
+    }
+
+    .action-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.38rem 0.85rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+
+    .btn-edit {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+    .btn-edit:hover {
+        background: #1d4ed8;
+        color: white;
+        border-color: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(29,78,216,0.25);
+    }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .btn-delete:hover {
+        background: #b91c1c;
+        color: white;
+        border-color: #b91c1c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(185,28,28,0.25);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 0.4rem;
+    }
+
+    .empty-desc {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+    }
+
+    /* ── Footer ── */
+    .admin-footer {
+        margin-left: var(--sidebar-width);
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-light);
+        padding: 2rem;
+        transition: var(--transition);
+    }
+
+    .admin-footer.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-text { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .footer-links a:hover { color: #333; }
+
+    /* ── Animations ── */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .fade-in:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 1024px) {
+        .page-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .admin-main { margin-left: 0; padding: 1.25rem; }
+        .admin-main.sidebar-collapsed { margin-left: 0; }
+        .admin-footer { margin-left: 0; padding: 1.25rem; }
+        .banner-title { font-size: 1.5rem; }
+        .table-section-header { flex-direction: column; align-items: flex-start; }
+        .search-box input { width: 140px; }
+        .footer-content { flex-direction: column; text-align: center; }
+    }
+</style>
+
+<main class="admin-main" id="adminMain">
+
+    <!-- Page Banner -->
+    <section class="page-banner fade-in">
+        <div class="banner-content">
+            <div class="banner-icon">
+                <i class="fas fa-box"></i>
+            </div>
+            <div>
+                <h2 class="banner-title">Manage Products</h2>
+                <p class="banner-subtitle">Add new products and manage the existing catalog</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="page-grid">
+
+        <!-- Add Product Form -->
+        <div class="fade-in">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="card-title">Add New Product</span>
+                </div>
+            {% if messages %}
+          {% for message in messages %}
+            <div style="color: red" class="alert-msg {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select name="category" required class="form-control">
+                                <option value="">-- Select Category --</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat.id }}">{{ cat.categoryname }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Title</label>
+                            <input type="text" name="title" placeholder="Enter product title" required class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <input type="text" name="description" placeholder="Enter description" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Image</label>
+                            <div class="file-input-wrapper">
+                                <input type="file" name="image">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">URL</label>
+                            <input type="text" name="url" placeholder="Enter product URL" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-plus"></i> Add Product
+                        </button>
+                    </form>
+
+                    {% if messages %}
+                    <div class="messages-box">
+                        {% for message in messages %}
+                            <div class="message-item">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Table -->
+        <div class="fade-in">
+            <div class="card">
+                <div class="table-section-header">
+                    <div class="table-title">
+                        <i class="fas fa-list"></i>
+                        Product Catalog
+                    </div>
+
+                </div>
+
+                <div class="table-responsive">
+                    <table class="products-table">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>URL</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            {% for product in products %}
+                            <tr>
+                                <td>
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.title }}" class="product-thumb">
+                                    {% else %}
+                                        <div class="no-image"><i class="fas fa-image"></i></div>
+                                    {% endif %}
+                                </td>
+                                <td>{{ product.title }}</td>
+                                <td><span class="category-pill">{{ product.CATEGORY.categoryname }}</span></td>
+                                <td>{{ product.description }}</td>
+                                <td>
+                                    <a href="{{ product.url }}" target="_blank" class="view-link">
+                                        <i class="fas fa-external-link-alt"></i> View
+                                    </a>
+                                </td>
+                                <td>
+                                    <div class="action-group">
+                                        <a href="{% url 'admin_editproduct' product.id %}" class="btn-action btn-edit">
+                                            <i class="fas fa-pen"></i> Edit
+                                        </a>
+                                        <a href="{% url 'admin_deleteproduct' product.id %}"
+                                           onclick="return confirm('Are you sure you want to delete this product?');"
+                                           class="btn-action btn-delete">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6">
+                                    <div class="empty-state">
+                                        <div class="empty-icon"><i class="fas fa-box-open"></i></div>
+                                        <div class="empty-title">No products yet</div>
+                                        <div class="empty-desc">Add your first product using the form.</div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="admin-footer" id="adminFooter">
+    <div class="footer-content">
+        <div class="footer-text">
+            © 2024 Arogyam 360 Admin Panel. All rights reserved. | Version 2.1.0
+        </div>
+        <div class="footer-links">
+            <a href="/admin/help/">Help & Support</a>
+            <a href="/admin/documentation/">Documentation</a>
+            <a href="/admin/changelog/">Changelog</a>
+            <a href="/admin/system-info/">System Info</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Sync sidebar collapse
+    const adminMain   = document.getElementById('adminMain');
+    const adminFooter = document.getElementById('adminFooter');
+    const sidebar     = document.getElementById('sidebar');
+
+    if (sidebar && adminMain && adminFooter) {
+        const observer = new MutationObserver(() => {
+            const collapsed = sidebar.classList.contains('collapsed');
+            adminMain.classList.toggle('sidebar-collapsed', collapsed);
+            adminFooter.classList.toggle('sidebar-collapsed', collapsed);
+        });
+        observer.observe(sidebar, { attributes: true });
+    }
+
+    // Live search
+    document.getElementById('tableSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll('#tableBody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+</script>

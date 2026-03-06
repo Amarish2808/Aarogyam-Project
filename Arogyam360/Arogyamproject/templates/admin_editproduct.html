@@ -1,0 +1,468 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .admin-main {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 2rem;
+        transition: var(--transition);
+        min-height: calc(100vh - var(--header-height));
+        background: var(--bg-primary);
+    }
+
+    .admin-main.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* ── Page Banner ── */
+    .page-banner {
+        background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+        color: #000;
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 200px; height: 200px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 50%;
+        transform: translate(50%,-50%);
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: 40px;
+        width: 120px; height: 120px;
+        background: rgba(0,0,0,0.07);
+        border-radius: 50%;
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .banner-icon {
+        width: 60px; height: 60px;
+        background: rgba(0,0,0,0.15);
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+    }
+
+    .banner-title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    /* ── Form card ── */
+    .form-card {
+        max-width: 680px;
+        margin: 0 auto;
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        overflow: hidden;
+    }
+
+    .form-card-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .form-card-header i { color: #888; }
+
+    .form-card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .form-card-body { padding: 2rem; }
+
+    /* ── Form fields ── */
+    .form-group { margin-bottom: 1.4rem; }
+
+    .form-label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1px solid var(--border-medium);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        transition: var(--transition);
+        font-family: inherit;
+        outline: none;
+    }
+
+    .form-control:focus {
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.12);
+    }
+
+    .form-control::placeholder { color: var(--text-muted); }
+
+    select.form-control {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        padding-right: 2.5rem;
+    }
+
+    /* ── Current image preview ── */
+    .image-preview-box {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1rem 1.25rem;
+        background: var(--bg-secondary);
+        border-radius: 12px;
+        border: 1px solid var(--border-light);
+    }
+
+    .preview-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--border-light);
+        flex-shrink: 0;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .preview-info {
+        flex: 1;
+    }
+
+    .preview-label {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.3rem;
+    }
+
+    .preview-name {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    /* ── File input ── */
+    .file-input-wrapper input[type="file"] {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        border: 1px dashed var(--border-medium);
+        border-radius: 10px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        background: var(--bg-primary);
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        outline: none;
+    }
+
+    .file-input-wrapper input[type="file"]:hover {
+        border-color: #888;
+        background: #fff;
+    }
+
+    /* ── Divider ── */
+    .form-divider {
+        border: none;
+        border-top: 1px solid var(--border-light);
+        margin: 1.75rem 0;
+    }
+
+    /* ── Action buttons ── */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .btn-update {
+        flex: 1;
+        padding: 0.8rem;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-update:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 0.8rem;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-medium);
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-cancel:hover {
+        background: #e2e8f0;
+        color: var(--text-primary);
+        transform: translateY(-2px);
+    }
+
+    /* ── Messages ── */
+    .messages-box { margin-top: 1.25rem; }
+
+    .message-item {
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        background: #dcfce7;
+        color: #15803d;
+        font-size: 0.88rem;
+        font-weight: 500;
+        text-align: center;
+    }
+
+    /* ── Footer ── */
+    .admin-footer {
+        margin-left: var(--sidebar-width);
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-light);
+        padding: 2rem;
+        transition: var(--transition);
+    }
+
+    .admin-footer.sidebar-collapsed { margin-left: var(--sidebar-collapsed-width); }
+
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-text { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .footer-links a:hover { color: #333; }
+
+    /* ── Animations ── */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+        .admin-main { margin-left: 0; padding: 1.25rem; }
+        .admin-main.sidebar-collapsed { margin-left: 0; }
+        .admin-footer { margin-left: 0; padding: 1.25rem; }
+        .banner-title { font-size: 1.5rem; }
+        .form-actions { flex-direction: column; }
+        .footer-content { flex-direction: column; text-align: center; }
+    }
+</style>
+
+<main class="admin-main" id="adminMain">
+
+    <!-- Page Banner -->
+    <section class="page-banner fade-in">
+        <div class="banner-content">
+            <div class="banner-icon">
+                <i class="fas fa-pen"></i>
+            </div>
+            <div>
+                <h2 class="banner-title">Edit Product</h2>
+                <p class="banner-subtitle">Update the details for <strong>{{ product.title }}</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Edit Form -->
+    <div class="form-card fade-in">
+        <div class="form-card-header">
+            <i class="fas fa-box"></i>
+            <span class="form-card-title">Product Details</span>
+        </div>
+
+        <div class="form-card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select name="category" required class="form-control">
+                        {% for cat in categories %}
+                            <option value="{{ cat.id }}"
+                                {% if product.CATEGORY.id == cat.id %}selected{% endif %}>
+                                {{ cat.categoryname }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="title" value="{{ product.title }}" required class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" name="description" value="{{ product.description }}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">URL</label>
+                    <input type="text" name="url" value="{{ product.url }}" class="form-control">
+                </div>
+
+                <hr class="form-divider">
+
+                <div class="form-group">
+                    <label class="form-label">Current Image</label>
+                    <div class="image-preview-box">
+                        <img src="{{ product.image.url }}" alt="{{ product.title }}" class="preview-img">
+                        <div class="preview-info">
+                            <div class="preview-label">Active image</div>
+                            <div class="preview-name">{{ product.title }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Replace Image</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" name="image">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-update">
+                        <i class="fas fa-check"></i> Update Product
+                    </button>
+                    <a href="{% url 'admin_product' %}" class="btn-cancel">
+                        <i class="fas fa-arrow-left"></i> Cancel
+                    </a>
+                </div>
+
+            </form>
+
+            {% if messages %}
+            <div class="messages-box">
+                {% for message in messages %}
+                    <div class="message-item">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="admin-footer" id="adminFooter">
+    <div class="footer-content">
+        <div class="footer-text">
+            © 2024 Arogyam 360 Admin Panel. All rights reserved. | Version 2.1.0
+        </div>
+        <div class="footer-links">
+            <a href="/admin/help/">Help & Support</a>
+            <a href="/admin/documentation/">Documentation</a>
+            <a href="/admin/changelog/">Changelog</a>
+            <a href="/admin/system-info/">System Info</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const adminMain   = document.getElementById('adminMain');
+    const adminFooter = document.getElementById('adminFooter');
+    const sidebar     = document.getElementById('sidebar');
+
+    if (sidebar && adminMain && adminFooter) {
+        const observer = new MutationObserver(() => {
+            const collapsed = sidebar.classList.contains('collapsed');
+            adminMain.classList.toggle('sidebar-collapsed', collapsed);
+            adminFooter.classList.toggle('sidebar-collapsed', collapsed);
+        });
+        observer.observe(sidebar, { attributes: true });
+    }
+</script>

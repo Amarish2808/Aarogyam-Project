@@ -1,0 +1,184 @@
+{% include 'gymowner_header.html' %}
+
+<style>
+/* Page */
+.feedback-page {
+    padding: 120px 0 80px;
+    background: #f4f6f9;
+    min-height: 100vh;
+}
+
+.feedback-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Section Title */
+.section-label {
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 0.4rem;
+}
+
+.section-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111;
+    margin: 0 0 0.4rem;
+}
+
+.section-divider {
+    width: 48px;
+    height: 3px;
+    background: #111;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+}
+
+/* Card */
+.card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* Header strip */
+.card-hero {
+    background: linear-gradient(135deg, #111 0%, #333 100%);
+    padding: 1.6rem 2rem;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+}
+
+.card-hero-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.card-hero-sub {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+}
+
+/* Table */
+.table-responsive { overflow-x:auto; }
+
+.feedback-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.feedback-table thead tr {
+    background: linear-gradient(90deg, #111 0%, #2d2d2d 100%);
+}
+
+.feedback-table thead th {
+    padding: 0.9rem 1.25rem;
+    color: rgba(255,255,255,0.9);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    text-align: center;
+}
+
+.feedback-table tbody td {
+    padding: 1rem 1.25rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.87rem;
+    color: #1e293b;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.feedback-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.title {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* Empty */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    font-family: 'Poppins', sans-serif;
+    color: #64748b;
+}
+
+.empty-state i {
+    font-size: 2.5rem;
+    margin-bottom: 0.6rem;
+    display: block;
+    color: #94a3b8;
+}
+
+@media(max-width:640px){
+    .section-heading{font-size:1.5rem;}
+}
+</style>
+
+
+<div class="feedback-page">
+<div class="feedback-container">
+
+    <span class="section-label">Reviews</span>
+    <h2 class="section-heading">Trainer Feedback</h2>
+    <div class="section-divider"></div>
+
+    <div class="card">
+        <div class="card-hero">
+            <div class="card-hero-title">User Feedback</div>
+            <div class="card-hero-sub">Feedback submitted by members for trainers</div>
+        </div>
+
+        <div class="table-responsive">
+        {% if feedbacks %}
+        <table class="feedback-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Trainer</th>
+                    <th>Title</th>
+                    <th>Feedback</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for f in feedbacks %}
+            <tr>
+                <td>{{ f.USER.username }}</td>
+                <td>{{ f.TRAINER.name }}</td>
+                <td class="title">{{ f.title }}</td>
+                <td>{{ f.feedback }}</td>
+                <td>{{ f.date }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-chat-left-text"></i>
+            No Feedback Received Yet
+        </div>
+        {% endif %}
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% include 'public_footer.html' %}

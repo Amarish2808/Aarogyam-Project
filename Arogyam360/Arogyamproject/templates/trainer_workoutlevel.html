@@ -1,0 +1,154 @@
+{% include 'trainer_header.html' %}
+
+<style>
+
+/* Page */
+.levels-page{
+    padding:110px 0 80px;
+    background:#f4f6f9;
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+}
+
+.levels-container{
+    width:92%;
+    max-width:1000px;
+    margin:auto;
+}
+
+/* Title */
+.section-label{
+    display:inline-block;
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:#888;
+    margin-bottom:.4rem;
+}
+
+.section-heading{
+    font-size:2rem;
+    font-weight:800;
+    color:#111;
+    margin:0 0 .4rem;
+}
+
+.section-divider{
+    width:48px;
+    height:3px;
+    background:#111;
+    border-radius:2px;
+    margin-bottom:2rem;
+}
+
+/* Card */
+.card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    overflow:hidden;
+}
+
+/* Header strip */
+.card-header{
+    background:linear-gradient(135deg,#111,#2f2f2f);
+    color:#fff;
+    padding:20px 26px;
+    font-weight:700;
+    font-size:1.05rem;
+}
+
+/* Table */
+.table-responsive{overflow-x:auto;}
+
+.levels-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.levels-table thead tr{
+    background:#f1f5f9;
+}
+
+.levels-table th{
+    padding:14px 18px;
+    text-align:left;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    color:#64748b;
+    font-weight:700;
+}
+
+.levels-table td{
+    padding:16px 18px;
+    border-top:1px solid #edf2f7;
+    font-size:.92rem;
+    color:#0f172a;
+    font-weight:500;
+}
+
+.levels-table tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* Empty */
+.empty-message{
+    text-align:center;
+    padding:60px 20px;
+    color:#94a3b8;
+    font-style:normal;
+    font-weight:600;
+}
+
+@media(max-width:768px){
+    .section-heading{font-size:1.5rem;}
+}
+
+</style>
+
+<div class="levels-page">
+<div class="levels-container">
+
+    <span class="section-label">Training</span>
+    <h2 class="section-heading">Workout Levels</h2>
+    <div class="section-divider"></div>
+
+    <div class="card">
+
+        <div class="card-header">
+            Available workout difficulty levels
+        </div>
+
+        <div class="table-responsive">
+
+        <table class="levels-table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for w in workoutlevels %}
+            <tr>
+                <td>{{ w.title }}</td>
+                <td>{{ w.description }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="empty-message">No workout levels found</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% include 'trainer_footer.html' %}

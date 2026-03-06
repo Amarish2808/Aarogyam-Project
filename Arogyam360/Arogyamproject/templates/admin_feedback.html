@@ -1,0 +1,224 @@
+{% include 'admin_header.html' %}
+
+<style>
+
+/* Layout */
+.admin-main {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--header-height);
+    padding: 2rem;
+    min-height: calc(100vh - var(--header-height));
+    background: var(--bg-primary);
+    transition: var(--transition);
+}
+.admin-main.sidebar-collapsed {
+    margin-left: var(--sidebar-collapsed-width);
+}
+
+/* Banner */
+.page-banner {
+    background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+    color: #000;
+    padding: 2.5rem;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.banner-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+}
+
+.banner-title { font-size: 2rem; font-weight: 700; }
+.banner-subtitle { font-size: 1rem; opacity: 0.8; }
+
+/* Card */
+.card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.table-section-header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.table-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+}
+
+/* Table */
+.table-responsive { overflow-x:auto; }
+
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.products-table thead tr {
+    background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.products-table thead th {
+    padding: 1rem 1.25rem;
+    color: rgba(255,255,255,0.9);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    text-align: left;
+}
+
+.products-table tbody tr {
+    border-bottom: 1px solid var(--border-light);
+    transition: var(--transition);
+}
+
+.products-table tbody tr:hover { background: #f8fafc; }
+
+.products-table tbody td {
+    padding: 1rem 1.25rem;
+    font-size: 0.88rem;
+    vertical-align: top;
+}
+
+/* Feedback text box */
+.feedback-text {
+    max-width: 380px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+.empty-icon {
+    font-size: 3rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+.empty-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+.empty-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+/* Responsive */
+@media (max-width:768px){
+    .admin-main { margin-left:0; padding:1.2rem; }
+    .banner-title { font-size:1.5rem; }
+}
+
+</style>
+
+
+<main class="admin-main" id="adminMain">
+
+    <!-- Banner -->
+    <section class="page-banner">
+        <div class="banner-content">
+            <div class="banner-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div>
+                <h2 class="banner-title">User Feedback</h2>
+                <p class="banner-subtitle">Review feedback submitted by users</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feedback Table -->
+    <div class="card">
+
+        <div class="table-section-header">
+            <div class="table-title">
+                <i class="fas fa-comment-dots"></i>
+                Feedback Records
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="products-table">
+
+                <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Gym</th>
+                    <th>Trainer</th>
+                    <th>Title</th>
+                    <th>Feedback</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for f in feedbacks %}
+                    <tr>
+                        <td>{{ f.user }}</td>
+                        <td>{{ f.gym }}</td>
+                        <td>{{ f.trainer }}</td>
+                        <td><strong>{{ f.title }}</strong></td>
+                        <td class="feedback-text">{{ f.feedback }}</td>
+                        <td>{{ f.date }}</td>
+                    </tr>
+
+                {% empty %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-icon"><i class="fas fa-comment-slash"></i></div>
+                                <div class="empty-title">No feedback submitted</div>
+                                <div class="empty-desc">User feedback will appear here once submitted.</div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</main>
+
+
+<script>
+const adminMain = document.getElementById('adminMain');
+const adminFooter = document.getElementById('adminFooter');
+const sidebar = document.getElementById('sidebar');
+
+if (sidebar && adminMain && adminFooter) {
+    const observer = new MutationObserver(() => {
+        const collapsed = sidebar.classList.contains('collapsed');
+        adminMain.classList.toggle('sidebar-collapsed', collapsed);
+        adminFooter.classList.toggle('sidebar-collapsed', collapsed);
+    });
+    observer.observe(sidebar, { attributes: true });
+}
+</script>

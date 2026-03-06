@@ -1,0 +1,216 @@
+{% include 'trainer_header.html' %}
+
+<style>
+
+/* Page */
+.complaint-page{
+    padding:110px 0 80px;
+    background:#f4f6f9;
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+}
+
+.container{
+    width:92%;
+    max-width:1050px;
+    margin:auto;
+}
+
+/* Title */
+.section-label{
+    display:inline-block;
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:#888;
+    margin-bottom:.4rem;
+}
+
+.section-heading{
+    font-size:2rem;
+    font-weight:800;
+    color:#111;
+    margin:0 0 .4rem;
+}
+
+.section-divider{
+    width:48px;
+    height:3px;
+    background:#111;
+    border-radius:2px;
+    margin-bottom:2rem;
+}
+
+/* Card */
+.card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    overflow:hidden;
+    margin-bottom:2rem;
+}
+
+/* Header strip */
+.card-header{
+    background:linear-gradient(135deg,#111,#2f2f2f);
+    color:#fff;
+    padding:18px 24px;
+    font-weight:700;
+    font-size:1.05rem;
+}
+
+/* Form */
+.form-body{
+    padding:24px;
+}
+
+input[type="text"]{
+    width:100%;
+    padding:.75rem 1rem;
+    border-radius:10px;
+    border:1.5px solid #e2e8f0;
+    background:#f8fafc;
+    font-family:'Poppins',sans-serif;
+    font-size:.9rem;
+    outline:none;
+    margin-bottom:16px;
+    transition:.2s;
+}
+
+input:focus{
+    border-color:#111;
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(17,17,17,.08);
+}
+
+button{
+    padding:.7rem 1.6rem;
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 20px rgba(0,0,0,.18);
+}
+
+/* Table */
+.table-responsive{overflow-x:auto;}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead tr{
+    background:#f1f5f9;
+}
+
+th{
+    padding:14px 18px;
+    text-align:left;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    color:#64748b;
+    font-weight:700;
+}
+
+td{
+    padding:16px 18px;
+    border-top:1px solid #edf2f7;
+    font-size:.92rem;
+    color:#0f172a;
+    font-weight:500;
+}
+
+tbody tr:hover{background:#f8fafc;}
+
+/* Status badges */
+.status-pending{
+    background:#fef3c7;
+    color:#b45309;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.75rem;
+    font-weight:700;
+    border:1px solid #fde68a;
+}
+
+.status-replied{
+    background:#dcfce7;
+    color:#15803d;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:.75rem;
+    font-weight:700;
+    border:1px solid #bbf7d0;
+}
+
+</style>
+
+
+<div class="complaint-page">
+<div class="container">
+
+    <span class="section-label">Support</span>
+    <h2 class="section-heading">Complaints</h2>
+    <div class="section-divider"></div>
+
+    <!-- Complaint Form -->
+    <div class="card">
+        <div class="card-header">Send Complaint</div>
+        <div class="form-body">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="complaint" placeholder="Enter your complaint..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Complaints Table -->
+    <div class="card">
+        <div class="card-header">Complaint History</div>
+
+        <div class="table-responsive">
+        <table>
+            <thead>
+            <tr>
+                <th>Complaint</th>
+                <th>Reply</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for c in complaints %}
+            <tr>
+                <td>{{ c.complaint }}</td>
+                <td>{{ c.reply }}</td>
+                <td>{{ c.date }}</td>
+                <td>
+                    {% if c.reply == "Pending" %}
+                        <span class="status-pending">Pending</span>
+                    {% else %}
+                        <span class="status-replied">Replied</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% include 'trainer_footer.html' %}

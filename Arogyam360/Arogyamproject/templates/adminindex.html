@@ -1,0 +1,584 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .admin-main {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 2rem;
+        transition: var(--transition);
+        min-height: calc(100vh - var(--header-height));
+        background: var(--bg-primary);
+    }
+
+    .admin-main.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* Welcome Banner */
+    .welcome-banner {
+        background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+        color: #000;
+        padding: 3rem 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 3rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .welcome-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 200px;
+        height: 200px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    .welcome-content {
+        position: relative;
+        z-index: 2;
+        max-width: 900px;
+    }
+
+    .welcome-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        letter-spacing: -0.02em;
+    }
+
+    .welcome-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .welcome-quote {
+        font-size: 1.1rem;
+        font-style: italic;
+        opacity: 0.85;
+        border-left: 4px solid #000;
+        padding-left: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    /* Movie Gym Gallery */
+    .movie-gallery {
+        margin-bottom: 3rem;
+    }
+
+    .section-header {
+        margin-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        margin-left: 2.5rem;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+
+    .movie-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        border: 1px solid var(--border-light);
+    }
+
+    .movie-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+    }
+
+    /* Movie Image with Unsplash backgrounds */
+    .movie-image {
+        width: 100%;
+        height: 280px;
+        border-radius: 15px 15px 0 0;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Dark overlay for text readability */
+    .movie-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.2));
+    }
+
+    .movie-label {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+        z-index: 2;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    /* UNSPLASH FITNESS IMAGES */
+    .rocky {
+        background-image: url("https://images.unsplash.com/photo-1549476464-37392f717541?w=800");
+    }
+
+    .creed {
+        background-image: url("https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800");
+    }
+
+    .southpaw {
+        background-image: url("https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800");
+    }
+
+    .warrior {
+        background-image: url("https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=800");
+    }
+
+    .nbdown {
+        background-image: url("https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=800");
+    }
+
+    .pain {
+        background-image: url("https://images.unsplash.com/photo-1532384748853-8f54a8f476e2?w=800");
+    }
+
+    .movie-content {
+        padding: 2rem;
+    }
+
+    .movie-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .movie-quote {
+        font-size: 1rem;
+        font-style: italic;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        padding-left: 1rem;
+        border-left: 3px solid #888;
+    }
+
+    .movie-description {
+        font-size: 0.95rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    /* Inspirational Section */
+    .inspiration-section {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 3rem;
+        box-shadow: var(--shadow-md);
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .inspiration-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
+
+    .inspiration-text {
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+    }
+
+    .inspiration-quotes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .quote-card {
+        background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+        padding: 2rem;
+        border-radius: 12px;
+        border-left: 4px solid #333;
+    }
+
+    .quote-text {
+        font-size: 1.05rem;
+        font-style: italic;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .quote-author {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-align: right;
+    }
+
+    /* Footer */
+    .admin-footer {
+        margin-left: var(--sidebar-width);
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-light);
+        padding: 2rem;
+        transition: var(--transition);
+    }
+
+    .admin-footer.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-text {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .footer-links a:hover {
+        color: #333;
+    }
+
+    /* Animation */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .fade-in:nth-child(1) {
+        animation-delay: 0.1s;
+    }
+
+    .fade-in:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .fade-in:nth-child(3) {
+        animation-delay: 0.3s;
+    }
+
+    .fade-in:nth-child(4) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .admin-main {
+            margin-left: 0;
+            padding: 1.5rem;
+        }
+
+        .admin-main.sidebar-collapsed {
+            margin-left: 0;
+        }
+
+        .admin-footer {
+            margin-left: 0;
+            padding: 1.5rem;
+        }
+
+        .admin-footer.sidebar-collapsed {
+            margin-left: 0;
+        }
+
+        .welcome-title {
+            font-size: 1.75rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1rem;
+        }
+
+        .gallery-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .inspiration-quotes {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<main class="admin-main" id="adminMain">
+    <!-- Welcome Banner -->
+    <section class="welcome-banner fade-in">
+        <div class="welcome-content">
+            <h2 class="welcome-title">Welcome to Arogyam 360 Admin Dashboard</h2>
+            <p class="welcome-subtitle">
+                Manage and oversee the complete gym ecosystem. Your dedication to fitness excellence
+                inspires thousands of members to push their limits and achieve their goals.
+            </p>
+            <div class="welcome-quote">
+                "Success isn't always about greatness. It's about consistency. Consistent hard work leads to success.
+                Greatness will come."
+            </div>
+        </div>
+    </section>
+
+    <!-- Movie Gym Gallery -->
+    <section class="movie-gallery">
+        <div class="section-header">
+            <h3 class="section-title">
+                <i class="fas fa-film"></i>
+                Legendary Fitness Moments
+            </h3>
+            <p class="section-subtitle">Inspiration from the greatest training montages in cinema history</p>
+        </div>
+
+        <div class="gallery-grid">
+
+            <!-- Rocky -->
+            <div class="movie-card fade-in">
+                <div class="movie-image rocky">
+                    <div class="movie-label">Rocky (1976) - Training Montage</div>
+                </div>
+                <div class="movie-content">
+                    <div class="movie-title">The Italian Stallion</div>
+                    <div class="movie-quote">
+                        "It ain't about how hard you hit. It's about how hard you can get hit and keep moving forward."
+                    </div>
+                    <div class="movie-description">
+                        Rocky Balboa's iconic training sequences revolutionized fitness culture in cinema.
+                        From running up the Philadelphia Museum of Art steps to one-arm push-ups, his dedication
+                        showed the world that champions are made through relentless determination.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Creed -->
+            <div class="movie-card fade-in">
+                <div class="movie-image creed">
+                    <div class="movie-label">Creed (2015) - Modern Training</div>
+                </div>
+                <div class="movie-content">
+                    <div class="movie-title">Legacy of Excellence</div>
+                    <div class="movie-quote">
+                        "One step at a time. One punch at a time. One round at a time."
+                    </div>
+                    <div class="movie-description">
+                        Adonis Creed's journey brought modern training methods to the boxing ring. The desert
+                        motorcycle chase and intense sparring sessions showcase how innovation meets tradition
+                        in the pursuit of greatness.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Southpaw -->
+            <div class="movie-card fade-in">
+                <div class="movie-image southpaw">
+                    <div class="movie-label">Southpaw (2015) - Comeback Story</div>
+                </div>
+                <div class="movie-content">
+                    <div class="movie-title">Rise from the Ashes</div>
+                    <div class="movie-quote">
+                        "When you got nothing, you got nothing to lose."
+                    </div>
+                    <div class="movie-description">
+                        Billy Hope's transformation shows the raw power of redemption through fitness. His intense
+                        training regimen and mental fortitude demonstrate that the gym is where warriors are reborn,
+                        stronger than before.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Warrior -->
+            <div class="movie-card fade-in">
+                <div class="movie-image warrior">
+                    <div class="movie-label">Warrior (2011) - Brothers in Battle</div>
+                </div>
+                <div class="movie-content">
+                    <div class="movie-title">Strength Through Struggle</div>
+                    <div class="movie-quote">
+                        "You're gonna have to go through hell, worse than any nightmare you've ever dreamed."
+                    </div>
+                    <div class="movie-description">
+                        The Conlon brothers' MMA training showcases the brutal honesty of combat sports preparation.
+                        Swimming in the ocean, hitting the heavy bag until exhaustion - this is where true warriors
+                        discover their limits and push beyond them.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Never Back Down -->
+            <div class="movie-card fade-in">
+                <div class="movie-image nbdown">
+                    <div class="movie-label">Never Back Down (2008) - MMA Evolution</div>
+                </div>
+                <div class="movie-content">
+                    <div class="movie-title">Fighting Spirit</div>
+                    <div class="movie-quote">
+                        "You got no fear. No respect. That's great. But you haven't learned the most important rule: control your emotions."
+                    </div>
+                    <div class="movie-description">
+                        Jake Tyler's transformation from street brawler to disciplined fighter illustrates the
+                        importance of structured training. The underground MMA gym becomes his sanctuary, where
+                        technique and discipline replace anger and chaos.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pain & Gain -->
+            <div class="movie-card fade-in">
+                <div class="movie-image pain">
+                    <div class="movie-label">Pain & Gain (2013) - Bodybuilding Culture</div>
+                </div>
+                <div class="movie-content">
+                    <div class="movie-title">Pursuit of Perfection</div>
+                    <div class="movie-quote">
+                        "I'm hot, I'm big. My name is in the gym."
+                    </div>
+                    <div class="movie-description">
+                        Set in the vibrant Miami bodybuilding scene, this film showcases the dedication of gym culture.
+                        From protein shakes to heavy lifting sessions, it captures the obsession that drives athletes
+                        to sculpt their bodies into works of art.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Inspirational Section -->
+    <section class="inspiration-section">
+        <h3 class="inspiration-title">The Philosophy of Fitness Excellence</h3>
+        <p class="inspiration-text">
+            Great gyms aren't just built with equipment and space - they're built with vision, dedication,
+            and the unwavering commitment to help every member achieve their personal best. As an administrator,
+            you're not just managing a system; you're enabling transformation, one workout at a time.
+        </p>
+
+        <div class="inspiration-quotes">
+            <div class="quote-card">
+                <div class="quote-text">
+                    "The resistance that you fight physically in the gym and the resistance that you fight
+                    in life can only build a strong character."
+                </div>
+                <div class="quote-author">— Arnold Schwarzenegger</div>
+            </div>
+
+            <div class="quote-card">
+                <div class="quote-text">
+                    "Strength does not come from physical capacity. It comes from an indomitable will."
+                </div>
+                <div class="quote-author">— Mahatma Gandhi</div>
+            </div>
+
+            <div class="quote-card">
+                <div class="quote-text">
+                    "The only place where success comes before work is in the dictionary."
+                </div>
+                <div class="quote-author">— Vidal Sassoon</div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="admin-footer" id="adminFooter">
+    <div class="footer-content">
+        <div class="footer-text">
+            © 2024 Arogyam 360 Admin Panel. All rights reserved. | Version 2.1.0
+        </div>
+        <div class="footer-links">
+            <a href="/admin/help/">Help & Support</a>
+            <a href="/admin/documentation/">Documentation</a>
+            <a href="/admin/changelog/">Changelog</a>
+            <a href="/admin/system-info/">System Info</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Sync sidebar collapse state with main content
+    const adminMain = document.getElementById('adminMain');
+    const adminFooter = document.getElementById('adminFooter');
+    const sidebar = document.getElementById('sidebar');
+
+    if (sidebar && adminMain && adminFooter) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    if (sidebar.classList.contains('collapsed')) {
+                        adminMain.classList.add('sidebar-collapsed');
+                        adminFooter.classList.add('sidebar-collapsed');
+                    } else {
+                        adminMain.classList.remove('sidebar-collapsed');
+                        adminFooter.classList.remove('sidebar-collapsed');
+                    }
+                }
+            });
+        });
+
+        observer.observe(sidebar, {attributes: true});
+    }
+</script>

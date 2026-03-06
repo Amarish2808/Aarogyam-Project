@@ -1,0 +1,275 @@
+{% include 'admin_header.html' %}
+
+<style>
+
+    .admin-main {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 2rem;
+        min-height: calc(100vh - var(--header-height));
+        background: var(--bg-primary);
+        transition: var(--transition);
+    }
+
+    .admin-main.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    .page-banner {
+        background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+        color: #000;
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .banner-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .banner-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+    }
+
+    .banner-title {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    .card {
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        overflow: hidden;
+    }
+
+    .table-section-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .table-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        display: flex;
+        gap: .6rem;
+        align-items: center;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .products-table thead tr {
+        background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+
+    .products-table thead th {
+        padding: 1rem 1.25rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    .products-table tbody tr {
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .products-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .products-table tbody td {
+        padding: 1rem 1.25rem;
+        font-size: 0.88rem;
+    }
+
+    .amount-admin {
+        background: #fee2e2;
+        color: #b91c1c;
+        padding: .3rem .8rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .amount-gym {
+        background: #dcfce7;
+        color: #15803d;
+        padding: .3rem .8rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    .empty-desc {
+        font-size: .9rem;
+        color: var(--text-muted);
+    }
+
+</style>
+
+
+<main class="admin-main" id="adminMain">
+
+    <section class="page-banner">
+
+        <div class="banner-content">
+
+            <div class="banner-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+
+            <div>
+                <h2 class="banner-title">Maintenance Fee Report</h2>
+                <p class="banner-subtitle">
+                    Monthly admin maintenance collected from gyms
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="card">
+
+        <div class="table-section-header">
+
+            <div class="table-title">
+
+                <i class="fas fa-chart-bar"></i>
+
+                Gym Maintenance Summary
+
+            </div>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table class="products-table">
+
+                <thead>
+
+                <tr>
+
+                    <th>Gym</th>
+                    <th>Place</th>
+                    <th>Month</th>
+                    <th>Admin Fee</th>
+                    <th>Gym Fee</th>
+                    <th>Total Fee</th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                {% for m in report %}
+
+                    <tr>
+
+                        <td><strong>{{ m.gym }}</strong></td>
+
+                        <td>{{ m.place }}</td>
+
+                        <td>{{ month }}/{{ year }}</td>
+
+                        <td>
+                            <span class="amount-admin">
+                                ₹{{ m.monthly_admin }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="amount-gym">
+                                ₹{{ m.monthly_gym }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <strong>₹{{ m.monthly_total }}</strong>
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="6">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    <i class="fas fa-wallet"></i>
+                                </div>
+
+                                <div class="empty-title">
+                                    No Maintenance Records
+                                </div>
+
+                                <div class="empty-desc">
+                                    Maintenance fees will appear here after payments
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>

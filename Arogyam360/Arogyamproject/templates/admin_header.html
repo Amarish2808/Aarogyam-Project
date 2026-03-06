@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arogyam 360 Admin - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #030403;
+            --secondary-green: #f6fef8;
+            --accent-green: #6fa46c;
+            --light-green: #8bc34a;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --sidebar-width: 280px;
+            --sidebar-collapsed-width: 80px;
+            --header-height: 70px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            overflow-x: hidden;
+        }
+
+        /* ================ SIDEBAR ================ */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
+            box-shadow: var(--shadow-xl);
+            z-index: 200;
+            transition: var(--transition);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.collapsed .sidebar-header {
+            padding: 1.5rem 0.5rem;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .logo-content {
+            transition: var(--transition);
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .logo-content {
+            opacity: 0;
+            width: 0;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: white;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-subtitle {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #505050 0%, #303030 100%);
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 0.4rem;
+            display: inline-block;
+        }
+
+        /* Navigation Sections */
+        .sidebar-nav {
+            padding: 1.5rem 0 2rem;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section-title {
+            padding: 0 1.5rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            padding: 0 0.5rem 0.5rem;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar.collapsed .nav-links a {
+            padding: 0.875rem 0;
+            justify-content: center;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            border-left-color: #888;
+        }
+
+        .nav-links a.active {
+            background: linear-gradient(90deg, rgba(136, 136, 136, 0.2) 0%, rgba(136, 136, 136, 0.05) 100%);
+            color: white;
+            border-left-color: #888;
+            font-weight: 600;
+        }
+
+        .nav-links a.active .nav-icon {
+            color: #888;
+        }
+
+        .nav-icon {
+            font-size: 1.15rem;
+            width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+        }
+
+        .nav-text {
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .sidebar.collapsed .nav-text {
+            opacity: 0;
+            width: 0;
+            margin: 0;
+        }
+
+        .nav-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            margin-left: auto;
+            font-weight: 600;
+        }
+
+        .sidebar.collapsed .nav-badge {
+            display: none;
+        }
+
+        /* ================ ADMIN HEADER ================ */
+        .admin-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 2rem;
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .admin-header.sidebar-collapsed {
+            left: var(--sidebar-collapsed-width);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+            background: var(--bg-secondary);
+            color: #333;
+        }
+
+        .header-title-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-separator {
+            color: var(--border-medium);
+        }
+
+        .breadcrumb span:last-child {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .notification-btn,
+        .profile-btn {
+            background: none;
+            border: none;
+            padding: 0.65rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .notification-btn:hover,
+        .profile-btn:hover {
+            background: var(--bg-secondary);
+            color: #333;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0.3rem;
+            right: 0.3rem;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            font-size: 0.65rem;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border: 2px solid var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 150;
+            display: none;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* ================ MOBILE RESPONSIVE ================ */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: var(--sidebar-width);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .sidebar.collapsed {
+                width: var(--sidebar-width);
+            }
+
+            .admin-header {
+                left: 0;
+                padding: 0 1rem;
+            }
+
+            .admin-header.sidebar-collapsed {
+                left: 0;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .breadcrumb {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ================ SIDEBAR ================ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="/adminindex/" class="admin-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-dumbbell"></i>
+                </div>
+                <div class="logo-content">
+                    <div class="logo-text">Arogyam 360</div>
+                    <div class="logo-subtitle">Admin Panel</div>
+                    <div class="admin-badge">Administrator</div>
+                </div>
+            </a>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Dashboard</div>
+                <ul class="nav-links">
+                    <li>
+                        <a href="/adminindex/" class="active">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <span class="nav-text">Home</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Management</div>
+                <ul class="nav-links">
+                    <li>
+                        <a href="/admin_verifygymowner/">
+                            <i class="nav-icon fas fa-user-check"></i>
+                            <span class="nav-text">Verify Gym Owners</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin_category/">
+                            <i class="nav-icon fas fa-layer-group"></i>
+                            <span class="nav-text">Manage Category</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin_product/">
+                            <i class="nav-icon fas fa-box"></i>
+                            <span class="nav-text">Manage Product</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin_payment/">
+                            <i class="nav-icon fas fa-credit-card"></i>
+                            <span class="nav-text">View Payments</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Support & System</div>
+                <ul class="nav-links">
+                    <li>
+                        <a href="/admin_complaint/">
+                            <i class="nav-icon fas fa-exclamation-circle"></i>
+                            <span class="nav-text">Complaints</span>
+{#                            <span class="nav-badge"></span>#}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin_feedback/">
+                            <i class="nav-icon fas fa-comments"></i>
+                            <span class="nav-text">Feedback</span>
+                        </a>
+                    </li>
+                     <li>
+                        <a href="/admin_gym_income_report/">
+                          <i class="nav-icon fas fa-money-bill-wave"></i>
+                            <span class="nav-text">Maintenance fee</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logout_view' %}">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <span class="nav-text">Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- ================ ADMIN HEADER ================ -->
+    <header class="admin-header" id="adminHeader">
+        <div class="header-left">
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="header-title-section">
+                <h1 class="page-title">Admin Dashboard</h1>
+                <div class="breadcrumb">
+                    <span>Home</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span>Dashboard</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="header-actions">
+
+                <button class="profile-btn" id="profileBtn">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <script>
+        // Sidebar Toggle Functionality
+        const sidebar = document.getElementById('sidebar');
+        const adminHeader = document.getElementById('adminHeader');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        sidebarToggle.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.toggle('mobile-open');
+                sidebarOverlay.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+                adminHeader.classList.toggle('sidebar-collapsed');
+                if (document.getElementById('adminMain')) {
+                    document.getElementById('adminMain').classList.toggle('sidebar-collapsed');
+                }
+                if (document.getElementById('adminFooter')) {
+                    document.getElementById('adminFooter').classList.toggle('sidebar-collapsed');
+                }
+            }
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('active');
+        });
+
+        // Close mobile sidebar on window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

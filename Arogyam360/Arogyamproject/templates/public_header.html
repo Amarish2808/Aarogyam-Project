@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - Axis Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="/static/assets/img/favicon.png" rel="icon">
+  <link href="/static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/static/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="/static/assets/css/main.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --black:    #000000;
+      --dark:     #111111;
+      --white:    #ffffff;
+      --white-70: rgba(255,255,255,0.7);
+      --white-20: rgba(255,255,255,0.2);
+      --white-10: rgba(255,255,255,0.1);
+      --font:     'Poppins', sans-serif;
+    }
+
+    /* ── Force black on ALL states — override Axis main.css scroll behavior ── */
+    #header.header,
+    #header.header.sticked,
+    #header.header.scrolled,
+    #header.header.header-scrolled,
+    #header.header.sticky,
+    #header.header[class] {
+      background: #000000 !important;
+      background-color: #000000 !important;
+      border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.5) !important;
+      padding: 0 !important;
+      height: auto !important;
+      transition: none !important;
+    }
+
+    /* ── Inner container ── */
+    #header .container-fluid {
+      padding: 16px 40px;
+    }
+
+    /* ── Logo ── */
+    #header .logo {
+      text-decoration: none;
+    }
+
+    #header .sitename {
+      font-family: var(--font);
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff !important;
+      margin: 0;
+      line-height: 1;
+    }
+
+    /* ── Nav wrapper ── */
+    #header .navmenu {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    #header .navmenu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    /* Base nav link */
+    #header .navmenu ul li a {
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7) !important;
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    #header .navmenu ul li a:hover,
+    #header .navmenu ul li a.active {
+      color: #ffffff !important;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ── Dropdown ── */
+    #header .navmenu .dropdown {
+      position: relative;
+    }
+
+    #header .navmenu .dropdown ul {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 175px;
+      background: #111111 !important;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 6px;
+      gap: 0;
+      z-index: 9999;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.75);
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    #header .navmenu .dropdown:hover ul,
+    #header .navmenu .dropdown:focus-within ul {
+      display: flex;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    #header .navmenu .dropdown ul li a {
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: rgba(255,255,255,0.7) !important;
+      font-size: 0.81rem;
+    }
+
+    #header .navmenu .dropdown ul li a:hover {
+      background: rgba(255,255,255,0.1);
+      color: #ffffff !important;
+    }
+
+    /* Chevron */
+    #header .navmenu .toggle-dropdown {
+      font-size: 0.63rem;
+      transition: transform 0.22s ease;
+    }
+
+    #header .navmenu .dropdown:hover .toggle-dropdown {
+      transform: rotate(180deg);
+    }
+
+    /* ── Contact CTA ── */
+    #header .navmenu > li > a[href="#contact"] {
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #000000 !important;
+      background: #ffffff !important;
+      padding: 9px 20px;
+      border-radius: 8px;
+      margin-left: 8px;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #header .navmenu > li > a[href="#contact"]:hover {
+      opacity: 0.85;
+    }
+
+    /* ── Mobile toggle ── */
+    #header .mobile-nav-toggle {
+      color: #ffffff !important;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    @media (max-width: 1199px) {
+      #header .mobile-nav-toggle {
+        display: inline-block;
+      }
+      #header .navmenu ul {
+        display: none;
+      }
+      #header .container-fluid {
+        padding: 14px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- <img src="/static/assets/img/logo.webp" alt=""> -->
+        <h1 class="sitename">Arogyam 360</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/" class="active">Home</a></li>
+          <li><a href="/login/">Login</a></li>
+          <li><a href="/gymowner_register/">Register</a></li>
+{#          <li class="dropdown">#}
+{#            <a href="#"><span>Register</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>#}
+{#            <ul>#}
+{#              <li><a href="/gymowner_register/">Gym Owner</a></li>#}
+{#            </ul>#}
+{#          </li>#}
+        </ul>
+{#        <li><a href="#contact">Contact</a></li>#}
+{##}
+{#        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>#}
+      </nav>
+
+    </div>
+  </header>
+

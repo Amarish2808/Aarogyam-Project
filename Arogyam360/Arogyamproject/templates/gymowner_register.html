@@ -1,0 +1,918 @@
+{% include 'public_header.html' %}
+
+<main class="main">
+    <section class="register-section">
+
+        <!-- Left visual panel -->
+        <div class="reg-visual">
+            <div class="visual-overlay"></div>
+            <img
+                    src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=900&q=80&auto=format&fit=crop"
+                    alt="Gym"
+                    class="visual-img"
+            >
+            <div class="visual-content">
+                <div class="visual-badge">Arogyam 360</div>
+                <h2 class="visual-headline">Grow Your<br>Gym Business.</h2>
+                <p class="visual-sub">Join hundreds of gym owners managing their fitness centers on one platform.</p>
+                <ul class="visual-perks">
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        Manage members &amp; trainers easily
+                    </li>
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        Track payments &amp; subscriptions
+                    </li>
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        Send notifications instantly
+                    </li>
+                    <li>
+                        <span class="perk-icon">✓</span>
+                        Monitor complaints &amp; feedback
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right form panel -->
+        <div class="reg-form-panel">
+            <div class="reg-form-inner">
+
+                <div class="form-logo">
+                    <div class="logo-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6.5 6.5h11M6.5 17.5h11M4 12h16M2 9l2 3-2 3M22 9l-2 3 2 3"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <h1 class="form-title">Gym Owner Registration</h1>
+                <p class="form-subtitle">Fill in your details to create your gym account</p>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert-msg {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="POST" enctype="multipart/form-data" id="regForm" novalidate>
+                    {% csrf_token %}
+
+                    <div class="form-grid">
+
+                        <!-- Name -->
+                        <div class="field-group">
+                            <label for="name">Full Name</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><path
+                          d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                            </div>
+                            <span class="err-msg" id="err-name"></span>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="field-group">
+                            <label for="phone">Phone Number</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.64 19a19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 3.08 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </span>
+                                <input type="number" id="phone" name="phone" placeholder="10-digit phone number"
+                                       required>
+                            </div>
+                            <span class="err-msg" id="err-phone"></span>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="field-group full-width">
+                            <label for="address">Address</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><path
+                          d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </span>
+                                <input type="text" id="address" name="address" placeholder="Street address" required>
+                            </div>
+                            <span class="err-msg" id="err-address"></span>
+                        </div>
+
+                        <!-- Place -->
+                        <div class="field-group">
+                            <label for="place">Place / City</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><path
+                          d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </span>
+                                <input type="text" id="place" name="place" placeholder="Your city / town" required>
+                            </div>
+                            <span class="err-msg" id="err-place"></span>
+                        </div>
+
+                        <!-- Fees -->
+                        <div class="field-group">
+                            <label for="fees">Monthly Fees (₹)</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path
+                          d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </span>
+                                <input type="text" id="fees" name="fees" placeholder="e.g. 999" required>
+                            </div>
+                            <span class="err-msg" id="err-fees"></span>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="field-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><path
+                          d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline
+                          points="22,6 12,13 2,6"/></svg>
+                </span>
+                                <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                            </div>
+                            <span class="err-msg" id="err-email"></span>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="field-group full-width">
+                            <label for="description">Gym Description</label>
+                            <div class="input-wrap" style="align-items: flex-start;">
+    <textarea id="description"
+              name="description"
+              placeholder="Describe your gym facilities, trainers, equipment, timings, etc."
+              rows="4"
+              style="width:100%;
+                     background:#f7f7f7;
+                     border:1px solid #e5e5e5;
+                     border-radius:9px;
+                     padding:11px 14px;
+                     font-family:'Poppins', sans-serif;
+                     font-size:0.845rem;
+                     color:#0a0a0a;
+                     outline:none;
+                     resize:vertical;"></textarea>
+                            </div>
+                            <span class="err-msg" id="err-description"></span>
+                        </div>
+
+                        <!-- ID Proof -->
+                        <div class="field-group full-width">
+                            <label for="idproof">ID Proof</label>
+                            <div class="file-wrap" id="fileWrap">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <span id="fileLabel">Click to upload ID proof (JPG, PNG, PDF)</span>
+                                <input type="file" id="idproof" name="idproof" accept=".jpg,.jpeg,.png,.pdf" required
+                                       onchange="updateFileName(this)">
+                            </div>
+                            <span class="err-msg" id="err-idproof"></span>
+                        </div>
+
+                        <!-- Profile Image -->
+                        <div class="field-group full-width">
+                            <label for="image">Profile Image</label>
+                            <div class="file-wrap" id="imageWrap">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                                <span id="imageLabel">Click to upload profile image (JPG, PNG)</span>
+                                <input type="file" id="image" name="image" accept=".jpg,.jpeg,.png" required
+                                       onchange="updateImageName(this)">
+                            </div>
+                            <span class="err-msg" id="err-image"></span>
+                        </div>
+
+                        <!-- Username -->
+                        <div class="field-group">
+                            <label for="username">Username</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><path
+                          d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                                <input type="text" id="username" name="username" placeholder="Choose a username"
+                                       required>
+                            </div>
+                            <span class="err-msg" id="err-username"></span>
+                        </div>
+
+                        <!-- Spacer on desktop -->
+                        <div class="field-group hide-mobile"></div>
+
+                        <!-- Password -->
+                        <div class="field-group">
+                            <label for="password">Password</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path
+                          d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                                <input type="password" id="password" name="password" placeholder="Min 8 characters"
+                                       required>
+                                <button type="button" class="toggle-pw" onclick="togglePw('password')" tabindex="-1">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="err-msg" id="err-password"></span>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="field-group">
+                            <label for="confirm_password">Confirm Password</label>
+                            <div class="input-wrap">
+                <span class="input-icon">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path
+                          d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                                <input type="password" id="confirm_password" name="confirm_password"
+                                       placeholder="Re-enter password" required>
+                                <button type="button" class="toggle-pw" onclick="togglePw('confirm_password')"
+                                        tabindex="-1">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="err-msg" id="err-confirm"></span>
+                        </div>
+
+                    </div><!-- /form-grid -->
+
+                    <button type="submit" class="submit-btn">
+                        <span>Create Account</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </form>
+
+                <p class="form-footer">
+                    Already registered? <a href="/login/">Sign in here</a>
+                </p>
+
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #ffffff;
+    }
+
+    .register-section {
+        display: flex;
+        min-height: 100vh;
+        padding-top: 70px;
+    }
+
+    /* ── Left visual ── */
+    .reg-visual {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+        display: none;
+    }
+
+    @media (min-width: 1000px) {
+        .reg-visual {
+            display: block;
+        }
+    }
+
+    .visual-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: brightness(0.4) saturate(0.7);
+    }
+
+    .visual-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(160deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.75) 100%);
+        z-index: 1;
+    }
+
+    .visual-content {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 52px;
+    }
+
+    .visual-badge {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 100px;
+        padding: 5px 14px;
+        margin-bottom: 18px;
+        width: fit-content;
+    }
+
+    .visual-headline {
+        font-size: 2.6rem;
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        color: #fff;
+        margin-bottom: 12px;
+    }
+
+    .visual-sub {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.55);
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .visual-perks {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .visual-perks li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .perk-icon {
+        width: 20px;
+        height: 20px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    /* ── Right form panel ── */
+    .reg-form-panel {
+        flex: 0 0 580px;
+        background: #ffffff;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 48px 40px;
+        overflow-y: auto;
+    }
+
+    @media (max-width: 1000px) {
+        .reg-form-panel {
+            flex: 1;
+            padding: 40px 24px;
+        }
+    }
+
+    .reg-form-inner {
+        width: 100%;
+        max-width: 500px;
+        animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(16px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-logo {
+        margin-bottom: 24px;
+    }
+
+    .logo-icon {
+        width: 46px;
+        height: 46px;
+        background: #000;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .form-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: #0a0a0a;
+        letter-spacing: -0.03em;
+        margin-bottom: 5px;
+    }
+
+    .form-subtitle {
+        font-size: 0.855rem;
+        color: #888;
+        margin-bottom: 28px;
+    }
+
+    /* Alerts */
+    .alert-msg {
+        font-size: 0.82rem;
+        font-weight: 500;
+        padding: 11px 14px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+    }
+
+    .alert-success {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+    }
+
+    .alert-error {
+        background: #fff1f2;
+        color: #dc2626;
+        border: 1px solid #fecdd3;
+    }
+
+    /* Grid */
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 16px;
+    }
+
+    @media (max-width: 540px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hide-mobile {
+            display: none;
+        }
+    }
+
+    .full-width {
+        grid-column: 1 / -1;
+    }
+
+    .hide-mobile { /* just a spacer */
+    }
+
+    /* Fields */
+    .field-group {
+        margin-bottom: 16px;
+    }
+
+    .field-group label {
+        display: block;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: #444;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+    }
+
+    .input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 12px;
+        color: #aaa;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+    }
+
+    .input-wrap input[type="text"],
+    .input-wrap input[type="email"],
+    .input-wrap input[type="number"],
+    .input-wrap input[type="password"] {
+        width: 100%;
+        background: #f7f7f7;
+        border: 1px solid #e5e5e5;
+        border-radius: 9px;
+        padding: 11px 38px 11px 36px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.845rem;
+        color: #0a0a0a;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .input-wrap input::placeholder {
+        color: #bbb;
+    }
+
+    .input-wrap input:focus {
+        border-color: #000;
+        background: #fff;
+    }
+
+    .input-wrap input.is-invalid {
+        border-color: #dc2626 !important;
+        background: #fff1f2;
+    }
+
+    .input-wrap input.is-valid {
+        border-color: #16a34a !important;
+    }
+
+    /* File upload */
+    .file-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f7f7f7;
+        border: 1px dashed #d0d0d0;
+        border-radius: 9px;
+        padding: 12px 16px;
+        cursor: pointer;
+        color: #888;
+        font-size: 0.83rem;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .file-wrap:hover {
+        border-color: #000;
+        background: #f0f0f0;
+        color: #333;
+    }
+
+    .file-wrap.has-file {
+        border-color: #16a34a;
+        background: #f0fdf4;
+        color: #16a34a;
+    }
+
+    .file-wrap input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Toggle password */
+    .toggle-pw {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #bbb;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: color 0.2s;
+    }
+
+    .toggle-pw:hover {
+        color: #333;
+    }
+
+    /* Error messages */
+    .err-msg {
+        display: block;
+        font-size: 0.72rem;
+        color: #dc2626;
+        margin-top: 3px;
+        min-height: 16px;
+    }
+
+    /* Submit */
+    .submit-btn {
+        width: 100%;
+        margin-top: 10px;
+        padding: 13px 24px;
+        background: #000;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .submit-btn:hover {
+        opacity: 0.85;
+        transform: translateY(-1px);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .form-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.82rem;
+        color: #999;
+    }
+
+    .form-footer a {
+        color: #000;
+        font-weight: 600;
+        text-decoration: none;
+        transition: opacity 0.2s;
+    }
+
+    .form-footer a:hover {
+        opacity: 0.6;
+    }
+</style>
+
+<script>
+    /* ── Password show/hide ── */
+    function togglePw(id) {
+        const inp = document.getElementById(id);
+        inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    /* ── File label update (ID Proof) ── */
+    function updateFileName(input) {
+        const label = document.getElementById('fileLabel');
+        const wrap = document.getElementById('fileWrap');
+        if (input.files && input.files[0]) {
+            label.textContent = input.files[0].name;
+            wrap.classList.add('has-file');
+        } else {
+            label.textContent = 'Click to upload ID proof (JPG, PNG, PDF)';
+            wrap.classList.remove('has-file');
+        }
+    }
+
+    /* ── File label update (Profile Image) ── */
+    function updateImageName(input) {
+        const label = document.getElementById('imageLabel');
+        const wrap = document.getElementById('imageWrap');
+        const err = document.getElementById('err-image');
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!allowed.includes(file.type)) {
+                label.textContent = 'Click to upload profile image (JPG, PNG)';
+                wrap.classList.remove('has-file');
+                wrap.style.borderColor = '#dc2626';
+                err.textContent = 'Only JPG and PNG files are allowed.';
+                input.value = '';
+                return;
+            }
+            label.textContent = file.name;
+            wrap.classList.add('has-file');
+            wrap.style.borderColor = '';
+            err.textContent = '';
+        } else {
+            label.textContent = 'Click to upload profile image (JPG, PNG)';
+            wrap.classList.remove('has-file');
+        }
+    }
+
+    /* ── Validation helpers ── */
+    function setError(fieldId, errId, msg) {
+        const inp = document.getElementById(fieldId);
+        const err = document.getElementById(errId);
+        inp.classList.add('is-invalid');
+        inp.classList.remove('is-valid');
+        err.textContent = msg;
+        return false;
+    }
+
+    function setValid(fieldId, errId) {
+        const inp = document.getElementById(fieldId);
+        const err = document.getElementById(errId);
+        inp.classList.remove('is-invalid');
+        inp.classList.add('is-valid');
+        err.textContent = '';
+        return true;
+    }
+
+    /* ── Form submit validation ── */
+    document.getElementById('regForm').addEventListener('submit', function (e) {
+        let valid = true;
+
+        /* Name */
+        const name = document.getElementById('name').value.trim();
+        if (!name) {
+            valid = setError('name', 'err-name', 'Full name is required.') && valid;
+        } else if (name.length < 3) {
+            valid = setError('name', 'err-name', 'Name must be at least 3 characters.') && valid;
+        } else {
+            setValid('name', 'err-name');
+        }
+
+        /* Phone */
+        const phone = document.getElementById('phone').value.trim();
+        if (!phone) {
+            valid = setError('phone', 'err-phone', 'Phone number is required.') && valid;
+        } else if (!/^\d{10}$/.test(phone)) {
+            valid = setError('phone', 'err-phone', 'Enter a valid 10-digit phone number.') && valid;
+        } else {
+            setValid('phone', 'err-phone');
+        }
+
+        /* Address */
+        const address = document.getElementById('address').value.trim();
+        if (!address) {
+            valid = setError('address', 'err-address', 'Address is required.') && valid;
+        } else {
+            setValid('address', 'err-address');
+        }
+
+        /* Place */
+        const place = document.getElementById('place').value.trim();
+        if (!place) {
+            valid = setError('place', 'err-place', 'Place is required.') && valid;
+        } else {
+            setValid('place', 'err-place');
+        }
+
+        /* Fees */
+        const fees = document.getElementById('fees').value.trim();
+        if (!fees) {
+            valid = setError('fees', 'err-fees', 'Fees amount is required.') && valid;
+        } else if (isNaN(fees) || Number(fees) <= 0) {
+            valid = setError('fees', 'err-fees', 'Enter a valid fees amount.') && valid;
+        } else {
+            setValid('fees', 'err-fees');
+        }
+        /* Description */
+const description = document.getElementById('description').value.trim();
+if (!description) {
+  valid = setError('description', 'err-description', 'Description is required.') && valid;
+} else if (description.length < 20) {
+  valid = setError('description', 'err-description', 'Description must be at least 20 characters.') && valid;
+} else {
+  setValid('description', 'err-description');
+}
+
+        /* Email */
+        const email = document.getElementById('email').value.trim();
+        const emailReg = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            valid = setError('email', 'err-email', 'Email address is required.') && valid;
+        } else if (!emailReg.test(email)) {
+            valid = setError('email', 'err-email', 'Enter a valid email address.') && valid;
+        } else {
+            setValid('email', 'err-email');
+        }
+
+        /* ID Proof */
+        const idproof = document.getElementById('idproof');
+        const errIdProof = document.getElementById('err-idproof');
+        if (!idproof.files || idproof.files.length === 0) {
+            idproof.closest('.file-wrap').style.borderColor = '#dc2626';
+            errIdProof.textContent = 'Please upload your ID proof.';
+            valid = false;
+        } else {
+            idproof.closest('.file-wrap').style.borderColor = '';
+            errIdProof.textContent = '';
+        }
+
+        /* Profile Image */
+        const image = document.getElementById('image');
+        const errImage = document.getElementById('err-image');
+        if (!image.files || image.files.length === 0) {
+            image.closest('.file-wrap').style.borderColor = '#dc2626';
+            errImage.textContent = 'Please upload your profile image.';
+            valid = false;
+        } else {
+            const allowed = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!allowed.includes(image.files[0].type)) {
+                image.closest('.file-wrap').style.borderColor = '#dc2626';
+                errImage.textContent = 'Only JPG and PNG files are allowed.';
+                valid = false;
+            } else {
+                image.closest('.file-wrap').style.borderColor = '';
+                errImage.textContent = '';
+            }
+        }
+
+        /* Username */
+        const username = document.getElementById('username').value.trim();
+        if (!username) {
+            valid = setError('username', 'err-username', 'Username is required.') && valid;
+        } else if (username.length < 4) {
+            valid = setError('username', 'err-username', 'Username must be at least 4 characters.') && valid;
+        } else if (/\s/.test(username)) {
+            valid = setError('username', 'err-username', 'Username cannot contain spaces.') && valid;
+        } else {
+            setValid('username', 'err-username');
+        }
+
+        /* Password */
+        const password = document.getElementById('password').value;
+        if (!password) {
+            valid = setError('password', 'err-password', 'Password is required.') && valid;
+        } else if (password.length < 8) {
+            valid = setError('password', 'err-password', 'Password must be at least 8 characters.') && valid;
+        } else {
+            setValid('password', 'err-password');
+        }
+
+        /* Confirm Password */
+        const confirm = document.getElementById('confirm_password').value;
+        if (!confirm) {
+            valid = setError('confirm_password', 'err-confirm', 'Please confirm your password.') && valid;
+        } else if (confirm !== password) {
+            valid = setError('confirm_password', 'err-confirm', 'Passwords do not match.') && valid;
+        } else {
+            setValid('confirm_password', 'err-confirm');
+        }
+
+        if (!valid) e.preventDefault();
+    });
+
+    /* ── Live validation on blur ── */
+    document.getElementById('phone').addEventListener('blur', function () {
+        const v = this.value.trim();
+        if (v && !/^\d{10}$/.test(v)) setError('phone', 'err-phone', 'Enter a valid 10-digit phone number.');
+        else if (v) setValid('phone', 'err-phone');
+    });
+
+    document.getElementById('email').addEventListener('blur', function () {
+        const v = this.value.trim();
+        const r = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (v && !r.test(v)) setError('email', 'err-email', 'Enter a valid email address.');
+        else if (v) setValid('email', 'err-email');
+    });
+
+    document.getElementById('confirm_password').addEventListener('input', function () {
+        const pw = document.getElementById('password').value;
+        if (this.value && this.value !== pw) setError('confirm_password', 'err-confirm', 'Passwords do not match.');
+        else if (this.value) setValid('confirm_password', 'err-confirm');
+    });
+</script>
+
+{% include 'public_footer.html' %}

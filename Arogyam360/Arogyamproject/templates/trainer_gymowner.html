@@ -1,0 +1,252 @@
+{#{% include 'trainer_header.html' %}#}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Assigned Gym Owner</title>#}
+{#    <style>#}
+{#        body {#}
+{#            font-family: Arial, Helvetica, sans-serif;#}
+{#            background-color: #f4f6f8;#}
+{#            margin: 0;#}
+{#            padding: 0;#}
+{#        }#}
+{##}
+{#        .container {#}
+{#            width: 60%;#}
+{#            margin: 60px auto;#}
+{#            background: #ffffff;#}
+{#            padding: 30px;#}
+{#            border-radius: 8px;#}
+{#            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);#}
+{#        }#}
+{##}
+{#        h2 {#}
+{#            text-align: center;#}
+{#            color: #333;#}
+{#            margin-bottom: 30px;#}
+{#        }#}
+{##}
+{#        .info {#}
+{#            margin-bottom: 15px;#}
+{#            font-size: 16px;#}
+{#        }#}
+{##}
+{#        .info span {#}
+{#            font-weight: bold;#}
+{#            color: #555;#}
+{#        }#}
+{##}
+{#        .status {#}
+{#            padding: 8px 15px;#}
+{#            display: inline-block;#}
+{#            border-radius: 5px;#}
+{#            background-color: #e3f2fd;#}
+{#            color: #0d47a1;#}
+{#            font-weight: bold;#}
+{#        }#}
+{##}
+{#        .back-btn {#}
+{#            display: block;#}
+{#            width: fit-content;#}
+{#            margin: 30px auto 0;#}
+{#            text-decoration: none;#}
+{#            background-color: #333;#}
+{#            color: #fff;#}
+{#            padding: 10px 20px;#}
+{#            border-radius: 5px;#}
+{#        }#}
+{##}
+{#        .back-btn:hover {#}
+{#            background-color: #555;#}
+{#        }#}
+{#    </style>#}
+{#</head>#}
+{#<body>#}
+{#<div style="height: 100px;"></div>#}
+{#<div class="container">#}
+{#    <h2>Assigned Gym Owner Details</h2>#}
+{##}
+{#    <div class="info">#}
+{#        <span>Name:</span> {{ gym.name }}#}
+{#    </div>#}
+{##}
+{#    <div class="info">#}
+{#        <span>Email:</span> {{ gym.email }}#}
+{#    </div>#}
+{##}
+{#    <div class="info">#}
+{#        <span>Phone:</span> {{ gym.phone }}#}
+{#    </div>#}
+{##}
+{#    <div class="info">#}
+{#        <span>Address:</span> {{ gym.address }}#}
+{#    </div>#}
+{##}
+{#    <div class="info">#}
+{#        <span>Status:</span>#}
+{#        <span class="status">{{ gym.status }}</span>#}
+{#    </div>#}
+{##}
+{#    <a href="{% url 'trainer' %}" class="back-btn">Back to Dashboard</a>#}
+{#</div>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+
+{% include 'trainer_header.html' %}
+
+<style>
+
+/* Page background */
+.page-wrapper{
+    padding:110px 0 80px;
+    background:#f4f6f9;
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+}
+
+/* Container */
+.profile-card{
+    max-width:780px;
+    margin:auto;
+    background:#fff;
+    border-radius:18px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    overflow:hidden;
+}
+
+/* Top Header */
+.profile-header{
+    background:linear-gradient(135deg,#111,#2f2f2f);
+    padding:28px 34px;
+    color:#fff;
+}
+
+.profile-title{
+    font-size:1.35rem;
+    font-weight:700;
+    letter-spacing:.2px;
+}
+
+/* Body */
+.profile-body{
+    padding:26px 34px 10px 34px;
+}
+
+/* Info rows */
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 0;
+    border-bottom:1px solid #edf2f7;
+}
+
+.label{
+    font-size:.74rem;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    color:#94a3b8;
+    font-weight:700;
+}
+
+.value{
+    font-size:.95rem;
+    font-weight:600;
+    color:#0f172a;
+}
+
+/* Status */
+.status{
+    padding:6px 14px;
+    border-radius:20px;
+    font-size:.75rem;
+    font-weight:700;
+    background:#e0f2fe;
+    color:#0369a1;
+    border:1px solid #bae6fd;
+}
+
+/* Footer */
+.profile-footer{
+    padding:24px 34px 30px 34px;
+    text-align:center;
+}
+
+.back-btn{
+    display:inline-block;
+    padding:10px 26px;
+    background:#111;
+    color:#fff;
+    text-decoration:none;
+    border-radius:10px;
+    font-size:.85rem;
+    font-weight:600;
+    transition:.25s ease;
+}
+
+.back-btn:hover{
+    background:#2f2f2f;
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+}
+
+/* Mobile */
+@media(max-width:768px){
+    .profile-body,.profile-header,.profile-footer{padding:20px;}
+    .info-row{flex-direction:column;align-items:flex-start;gap:6px;}
+}
+
+</style>
+
+<div class="page-wrapper">
+
+<div class="profile-card">
+
+    <div class="profile-header">
+        <div class="profile-title">Assigned Gym Owner</div>
+    </div>
+
+    <div class="profile-body">
+
+        <div class="info-row">
+            <div class="label">Name</div>
+            <div class="value">{{ gym.name }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="label">Email</div>
+            <div class="value">{{ gym.email }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="label">Phone</div>
+            <div class="value">{{ gym.phone }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="label">Address</div>
+            <div class="value">{{ gym.address }}</div>
+        </div>
+
+        <div class="info-row">
+            <div class="label">Status</div>
+            <div class="value"><span class="status">{{ gym.status }}</span></div>
+        </div>
+
+    </div>
+
+    <div class="profile-footer">
+        <a href="{% url 'trainer' %}" class="back-btn">Back to Dashboard</a>
+    </div>
+
+</div>
+
+</div>
+
+{% include 'trainer_footer.html' %}

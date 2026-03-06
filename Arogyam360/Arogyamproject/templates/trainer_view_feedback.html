@@ -1,0 +1,156 @@
+{% include 'trainer_header.html' %}
+
+<style>
+
+/* Page */
+.feedback-page{
+    padding:110px 0 80px;
+    background:#f4f6f9;
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+}
+
+.container{
+    width:92%;
+    max-width:1100px;
+    margin:auto;
+}
+
+/* Title */
+.section-label{
+    display:inline-block;
+    font-size:.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:#888;
+    margin-bottom:.4rem;
+}
+
+.section-heading{
+    font-size:2rem;
+    font-weight:800;
+    color:#111;
+    margin:0 0 .4rem;
+}
+
+.section-divider{
+    width:48px;
+    height:3px;
+    background:#111;
+    border-radius:2px;
+    margin-bottom:2rem;
+}
+
+/* Card */
+.card{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 10px 35px rgba(0,0,0,0.08);
+    overflow:hidden;
+}
+
+/* Header strip */
+.card-header{
+    background:linear-gradient(135deg,#111,#2f2f2f);
+    color:#fff;
+    padding:18px 24px;
+    font-weight:700;
+    font-size:1.05rem;
+}
+
+/* Table */
+.table-responsive{overflow-x:auto;}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead tr{
+    background:#f1f5f9;
+}
+
+th{
+    padding:14px 18px;
+    text-align:left;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    color:#64748b;
+    font-weight:700;
+}
+
+td{
+    padding:16px 18px;
+    border-top:1px solid #edf2f7;
+    font-size:.92rem;
+    color:#0f172a;
+    font-weight:500;
+}
+
+tbody tr:hover{background:#f8fafc;}
+
+.title{
+    font-weight:700;
+    color:#0f172a;
+}
+
+/* Empty state */
+.no-data{
+    text-align:center;
+    padding:60px 20px;
+    font-size:.95rem;
+    color:#94a3b8;
+    font-weight:600;
+}
+
+</style>
+
+
+<div class="feedback-page">
+<div class="container">
+
+    <span class="section-label">Reviews</span>
+    <h2 class="section-heading">My Feedback</h2>
+    <div class="section-divider"></div>
+
+    <div class="card">
+        <div class="card-header">Feedback given by users about your training</div>
+
+        <div class="table-responsive">
+
+        {% if feedbacks %}
+        <table>
+            <thead>
+            <tr>
+                <th>User</th>
+                <th>Title</th>
+                <th>Feedback</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for f in feedbacks %}
+            <tr>
+                <td>{{ f.USER.username }}</td>
+                <td class="title">{{ f.title }}</td>
+                <td>{{ f.feedback }}</td>
+                <td>{{ f.date }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {% else %}
+            <div class="no-data">No Feedback Received Yet</div>
+        {% endif %}
+
+        </div>
+    </div>
+
+</div>
+</div>
+
+{% include 'trainer_footer.html' %}

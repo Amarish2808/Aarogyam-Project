@@ -1,0 +1,625 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .admin-main {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 2rem;
+        transition: var(--transition);
+        min-height: calc(100vh - var(--header-height));
+        background: var(--bg-primary);
+    }
+
+    .admin-main.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* ── Page Banner ── */
+    .page-banner {
+        background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+        color: #000;
+        padding: 2.5rem 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 200px; height: 200px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 50%;
+        transform: translate(50%,-50%);
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: 40px;
+        width: 120px; height: 120px;
+        background: rgba(0,0,0,0.07);
+        border-radius: 50%;
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .banner-icon {
+        width: 60px; height: 60px;
+        background: rgba(0,0,0,0.15);
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+        backdrop-filter: blur(4px);
+    }
+
+    .banner-title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    /* ── Stats Row ── */
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 1.5rem 1.75rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: var(--transition);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .stat-icon {
+        width: 46px; height: 46px;
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.pending  { background: #fef3c7; color: #d97706; }
+    .stat-icon.approved { background: #dcfce7; color: #16a34a; }
+    .stat-icon.rejected { background: #fee2e2; color: #dc2626; }
+    .stat-icon.total    { background: #e0e7ff; color: #4f46e5; }
+
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+        margin-bottom: 0.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* ── Table Section ── */
+    .table-section {
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        overflow: hidden;
+    }
+
+    .table-section-header {
+        padding: 1.75rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .table-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .table-title i {
+        color: #888;
+    }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg-secondary);
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-light);
+        transition: var(--transition);
+    }
+
+    .search-box:focus-within {
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.1);
+    }
+
+    .search-box i {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        width: 200px;
+    }
+
+    .search-box input::placeholder {
+        color: var(--text-muted);
+    }
+
+    /* ── Table ── */
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .approvals-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .approvals-table thead tr {
+        background: linear-gradient(90deg, #1a1a1a 0%, #2d2d2d 100%);
+    }
+
+    .approvals-table thead th {
+        padding: 1rem 1.25rem;
+        color: rgba(255,255,255,0.9);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .approvals-table thead th:first-child { border-radius: 0; }
+
+    .approvals-table tbody tr {
+        border-bottom: 1px solid var(--border-light);
+        transition: var(--transition);
+    }
+
+    .approvals-table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    .approvals-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .approvals-table tbody td {
+        padding: 1rem 1.25rem;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        vertical-align: middle;
+    }
+
+    /* Name cell */
+    .owner-cell {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .owner-avatar {
+        width: 36px; height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4a4a4a 0%, #2a2a2a 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: white;
+        font-size: 0.85rem;
+        font-weight: 600;
+        flex-shrink: 0;
+    }
+
+    .owner-name {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    /* ID Proof link */
+    .view-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        color: #333;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0.3rem 0.75rem;
+        border-radius: 8px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-medium);
+        transition: var(--transition);
+    }
+
+    .view-link:hover {
+        background: #1a1a1a;
+        color: white;
+        border-color: #1a1a1a;
+    }
+
+    /* Status badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.85rem;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        text-transform: capitalize;
+    }
+
+    .status-badge::before {
+        content: '';
+        width: 6px; height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    .status-badge.approved {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .status-badge.rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    /* Action buttons */
+    .action-group {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.9rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+
+    .btn-approve {
+        background: #dcfce7;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+    }
+
+    .btn-approve:hover {
+        background: #15803d;
+        color: white;
+        border-color: #15803d;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(21,128,61,0.25);
+    }
+
+    .btn-reject {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .btn-reject:hover {
+        background: #b91c1c;
+        color: white;
+        border-color: #b91c1c;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(185,28,28,0.25);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .empty-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-desc {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    /* ── Footer ── */
+    .admin-footer {
+        margin-left: var(--sidebar-width);
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-light);
+        padding: 2rem;
+        transition: var(--transition);
+    }
+
+    .admin-footer.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-text {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+
+    .footer-links {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .footer-links a:hover { color: #333; }
+
+    /* ── Fade-in animation ── */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .fade-in:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 768px) {
+        .admin-main {
+            margin-left: 0;
+            padding: 1.25rem;
+        }
+
+        .admin-main.sidebar-collapsed { margin-left: 0; }
+
+        .admin-footer {
+            margin-left: 0;
+            padding: 1.25rem;
+        }
+
+        .banner-title { font-size: 1.5rem; }
+
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+
+        .table-section-header { flex-direction: column; align-items: flex-start; }
+
+        .search-box input { width: 140px; }
+
+        .approvals-table thead th,
+        .approvals-table tbody td {
+            padding: 0.75rem 0.875rem;
+            font-size: 0.82rem;
+        }
+
+        .footer-content { flex-direction: column; text-align: center; }
+    }
+</style>
+
+<main class="admin-main" id="adminMain">
+
+    <!-- Page Banner -->
+    <section class="page-banner fade-in">
+        <div class="banner-content">
+            <div class="banner-icon">
+                <i class="fas fa-user-check"></i>
+            </div>
+            <div>
+                <h2 class="banner-title">Gym Owner Approvals</h2>
+                <p class="banner-subtitle">Review, approve, or reject gym owner registration requests</p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Table Section -->
+    <section class="table-section fade-in">
+        <div class="table-section-header">
+            <div class="table-title">
+                <i class="fas fa-list"></i>
+                Registration Requests
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+            <table class="approvals-table" id="approvalsTable">
+                <thead>
+                    <tr>
+                        <th>Owner</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Place</th>
+                        <th>Fees</th>
+                        <th>ID Proof</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+               <tbody id="tableBody">
+    {% for i in gym %}
+    <tr>
+        <td>
+            <div class="owner-cell">
+                {% if i.image %}
+                    <img src="{{ i.image.url }}" alt="Profile"
+                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;">
+                {% else %}
+                    <div class="owner-avatar">{{ i.name|first|upper }}</div>
+                {% endif %}
+                <span class="owner-name">{{ i.name }}</span>
+            </div>
+        </td>
+        <td>{{ i.email }}</td>
+        <td>{{ i.phone }}</td>
+        <td>{{ i.address }}</td>
+        <td>{{ i.place }}</td>
+        <td>₹{{ i.fees }}</td>
+        <td>
+            <a href="{{ i.idproof.url }}" target="_blank" class="view-link">
+                <i class="fas fa-eye"></i> View
+            </a>
+        </td>
+        <td>
+            <span class="status-badge {{ i.status|lower }}">{{ i.status }}</span>
+        </td>
+        <td>
+            <div class="action-group">
+                <a href="{% url 'admin_approvegymowner' i.id %}" class="btn-action btn-approve">
+                    <i class="fas fa-check"></i> Approve
+                </a>
+                <a href="{% url 'admin_rejectgymowner' i.id %}"
+                   class="btn-action btn-reject"
+                   onclick="return confirm('Are you sure you want to reject this gym owner?');">
+                    <i class="fas fa-times"></i> Reject
+                </a>
+            </div>
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="9">
+            <div class="empty-state">
+                <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+                <div class="empty-title">No pending approvals</div>
+                <div class="empty-desc">All gym owner requests have been reviewed.</div>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="admin-footer" id="adminFooter">
+    <div class="footer-content">
+        <div class="footer-text">
+            © 2024 Arogyam 360 Admin Panel. All rights reserved. | Version 2.1.0
+        </div>
+        <div class="footer-links">
+            <a href="/admin/help/">Help & Support</a>
+            <a href="/admin/documentation/">Documentation</a>
+            <a href="/admin/changelog/">Changelog</a>
+            <a href="/admin/system-info/">System Info</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Sync sidebar collapse with main + footer
+    const adminMain   = document.getElementById('adminMain');
+    const adminFooter = document.getElementById('adminFooter');
+    const sidebar     = document.getElementById('sidebar');
+
+    if (sidebar && adminMain && adminFooter) {
+        const observer = new MutationObserver(() => {
+            const collapsed = sidebar.classList.contains('collapsed');
+            adminMain.classList.toggle('sidebar-collapsed', collapsed);
+            adminFooter.classList.toggle('sidebar-collapsed', collapsed);
+        });
+        observer.observe(sidebar, { attributes: true });
+    }
+
+    // Live search
+    document.getElementById('tableSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll('#tableBody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+</script>

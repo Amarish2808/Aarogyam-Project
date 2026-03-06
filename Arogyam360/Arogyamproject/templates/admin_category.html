@@ -1,0 +1,576 @@
+{% include 'admin_header.html' %}
+
+<style>
+    .admin-main {
+        margin-left: var(--sidebar-width);
+        margin-top: var(--header-height);
+        padding: 2rem;
+        transition: var(--transition);
+        min-height: calc(100vh - var(--header-height));
+        background: var(--bg-primary);
+    }
+
+    .admin-main.sidebar-collapsed {
+        margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* ── Page Banner ── */
+    .page-banner {
+        background: linear-gradient(135deg, #e0e0e0 0%, #808080 100%);
+        color: #000;
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .page-banner::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 200px; height: 200px;
+        background: rgba(0,0,0,0.1);
+        border-radius: 50%;
+        transform: translate(50%,-50%);
+    }
+
+    .page-banner::after {
+        content: '';
+        position: absolute;
+        bottom: -40px; left: 40px;
+        width: 120px; height: 120px;
+        background: rgba(0,0,0,0.07);
+        border-radius: 50%;
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .banner-icon {
+        width: 60px; height: 60px;
+        background: rgba(0,0,0,0.15);
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+    }
+
+    .banner-title {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.35rem;
+    }
+
+    .banner-subtitle {
+        font-size: 1rem;
+        opacity: 0.8;
+    }
+
+    /* ── Two-column layout ── */
+    .page-grid {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+
+    /* ── Card shell ── */
+    .card {
+        background: var(--bg-card);
+        border-radius: 20px;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--border-light);
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .card-header i { color: #888; }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+    }
+
+    .card-body { padding: 2rem; }
+
+    /* ── Add form ── */
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-label {
+        display: block;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border: 1px solid var(--border-medium);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        background: var(--bg-primary);
+        transition: var(--transition);
+        font-family: inherit;
+        outline: none;
+    }
+
+    .form-control:focus {
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.12);
+    }
+
+    .form-control::placeholder { color: var(--text-muted); }
+
+    .btn-submit {
+        width: 100%;
+        padding: 0.8rem;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        font-family: inherit;
+        margin-top: 0.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    /* ── Category list ── */
+    .list-section-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .list-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+
+    .list-title i { color: #888; }
+
+    .search-box {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--bg-secondary);
+        border-radius: 10px;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-light);
+        transition: var(--transition);
+    }
+
+    .search-box:focus-within {
+        border-color: #888;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.1);
+    }
+
+    .search-box i { color: var(--text-muted); font-size: 0.9rem; }
+
+    .search-box input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 0.9rem;
+        color: var(--text-primary);
+        width: 160px;
+    }
+
+    .search-box input::placeholder { color: var(--text-muted); }
+
+    /* Category items list */
+    .category-list {
+        list-style: none;
+        padding: 1rem 1.5rem;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        max-height: 520px;
+        overflow-y: auto;
+    }
+
+    .category-list::-webkit-scrollbar { width: 5px; }
+    .category-list::-webkit-scrollbar-track { background: transparent; }
+    .category-list::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 3px; }
+
+    .category-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-light);
+        background: var(--bg-primary);
+        transition: var(--transition);
+        flex-wrap: wrap;
+    }
+
+    .category-item:hover {
+        border-color: #ccc;
+        background: #fff;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .cat-index {
+        width: 28px; height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: rgba(255,255,255,0.85);
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .cat-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        flex: 1;
+        min-width: 100px;
+    }
+
+    .cat-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    /* Inline edit form */
+    .edit-form {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .edit-input {
+        padding: 0.4rem 0.75rem;
+        border: 1px solid var(--border-medium);
+        border-radius: 8px;
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        background: #fff;
+        font-family: inherit;
+        outline: none;
+        transition: var(--transition);
+        width: 140px;
+    }
+
+    .edit-input:focus {
+        border-color: #888;
+        box-shadow: 0 0 0 3px rgba(136,136,136,0.1);
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.38rem 0.85rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: var(--transition);
+        white-space: nowrap;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        text-decoration: none;
+    }
+
+    .btn-save {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe !important;
+    }
+
+    .btn-save:hover {
+        background: #1d4ed8;
+        color: white;
+        border-color: #1d4ed8 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(29,78,216,0.25);
+    }
+
+    .btn-delete {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca !important;
+    }
+
+    .btn-delete:hover {
+        background: #b91c1c;
+        color: white;
+        border-color: #b91c1c !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(185,28,28,0.25);
+    }
+
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .empty-icon { font-size: 2.5rem; color: var(--text-muted); margin-bottom: 1rem; }
+    .empty-title { font-size: 1rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.4rem; }
+    .empty-desc  { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── Footer ── */
+    .admin-footer {
+        margin-left: var(--sidebar-width);
+        background: var(--bg-card);
+        border-top: 1px solid var(--border-light);
+        padding: 2rem;
+        transition: var(--transition);
+    }
+
+    .admin-footer.sidebar-collapsed { margin-left: var(--sidebar-collapsed-width); }
+
+    .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .footer-text { color: var(--text-secondary); font-size: 0.9rem; }
+
+    .footer-links { display: flex; gap: 2rem; flex-wrap: wrap; }
+
+    .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        font-weight: 500;
+    }
+
+    .footer-links a:hover { color: #333; }
+
+    /* ── Animations ── */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .fade-in:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 1024px) {
+        .page-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+        .admin-main { margin-left: 0; padding: 1.25rem; }
+        .admin-main.sidebar-collapsed { margin-left: 0; }
+        .admin-footer { margin-left: 0; padding: 1.25rem; }
+        .banner-title { font-size: 1.5rem; }
+        .list-section-header { flex-direction: column; align-items: flex-start; }
+        .search-box input { width: 130px; }
+        .category-item { flex-direction: column; align-items: flex-start; }
+        .cat-actions { width: 100%; }
+        .edit-input { width: 100%; }
+        .footer-content { flex-direction: column; text-align: center; }
+    }
+</style>
+
+<main class="admin-main" id="adminMain">
+
+    <!-- Page Banner -->
+    <section class="page-banner fade-in">
+        <div class="banner-content">
+            <div class="banner-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
+            <div>
+                <h2 class="banner-title">Manage Categories</h2>
+                <p class="banner-subtitle">Add new categories and edit or remove existing ones</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="page-grid">
+
+        <!-- Add Category Form -->
+        <div class="fade-in">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="card-title">Add New Category</span>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div style="color: red" class="alert-msg {% if message.tags == 'success' %}alert-success{% else %}alert-error{% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="add">
+
+                        <div class="form-group">
+                            <label class="form-label">Category Name</label>
+                            <input type="text" name="categoryname" placeholder="Enter category name" required class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-plus"></i> Add Category
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Existing Categories -->
+        <div class="fade-in">
+            <div class="card">
+                <div class="list-section-header">
+                    <div class="list-title">
+                        <i class="fas fa-list"></i>
+                        Existing Categories
+                    </div>
+
+                </div>
+
+                <ul class="category-list" id="categoryList">
+                    {% for cat in categories %}
+                    <li class="category-item" data-name="{{ cat.categoryname|lower }}">
+                        <div class="cat-index">{{ forloop.counter }}</div>
+                        <span class="cat-name">{{ cat.categoryname }}</span>
+
+                        <div class="cat-actions">
+                            <!-- Edit form -->
+                            <form method="POST" action="" class="edit-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="edit">
+                                <input type="hidden" name="category_id" value="{{ cat.id }}">
+                                <input type="text" name="categoryname" value="{{ cat.categoryname }}" class="edit-input">
+                                <button type="submit" class="btn-action btn-save">
+                                    <i class="fas fa-check"></i> Save
+                                </button>
+                            </form>
+
+                            <!-- Delete form -->
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="category_id" value="{{ cat.id }}">
+                                <button type="submit"
+                                        onclick="return confirm('Delete this category?')"
+                                        class="btn-action btn-delete">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li>
+                        <div class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-folder-open"></i></div>
+                            <div class="empty-title">No categories yet</div>
+                            <div class="empty-desc">Add your first category using the form.</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="admin-footer" id="adminFooter">
+    <div class="footer-content">
+        <div class="footer-text">
+            © 2024 Arogyam 360 Admin Panel. All rights reserved. | Version 2.1.0
+        </div>
+        <div class="footer-links">
+            <a href="/admin/help/">Help & Support</a>
+            <a href="/admin/documentation/">Documentation</a>
+            <a href="/admin/changelog/">Changelog</a>
+            <a href="/admin/system-info/">System Info</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Sync sidebar collapse
+    const adminMain   = document.getElementById('adminMain');
+    const adminFooter = document.getElementById('adminFooter');
+    const sidebar     = document.getElementById('sidebar');
+
+    if (sidebar && adminMain && adminFooter) {
+        const observer = new MutationObserver(() => {
+            const collapsed = sidebar.classList.contains('collapsed');
+            adminMain.classList.toggle('sidebar-collapsed', collapsed);
+            adminFooter.classList.toggle('sidebar-collapsed', collapsed);
+        });
+        observer.observe(sidebar, { attributes: true });
+    }
+
+    // Live search
+    document.getElementById('catSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        document.querySelectorAll('#categoryList .category-item').forEach(item => {
+            item.style.display = item.dataset.name.includes(query) ? '' : 'none';
+        });
+    });
+</script>

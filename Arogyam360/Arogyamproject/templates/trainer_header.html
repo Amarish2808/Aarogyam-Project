@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index - Axis Bootstrap Template</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="/static/assets/img/favicon.png" rel="icon">
+  <link href="/static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="/static/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="/static/assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="/static/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="/static/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="/static/assets/css/main.css" rel="stylesheet">
+
+  <style>
+    /* ── Force black forever — override Axis template scroll states ── */
+    #header.header,
+    #header.header.sticked,
+    #header.header.scrolled,
+    #header.header.header-scrolled,
+    #header.header.sticky,
+    #header.header[class] {
+      background: #000000 !important;
+      background-color: #000000 !important;
+      border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.6) !important;
+      padding: 0 !important;
+      height: auto !important;
+      transition: none !important;
+    }
+
+    /* ── Container ── */
+    #header .container-fluid {
+      padding: 13px 36px;
+    }
+
+    /* ── Logo ── */
+    #header .logo {
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    #header .sitename {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff !important;
+      margin: 0;
+      line-height: 1;
+    }
+
+    /* ── Nav wrapper ── */
+    #header .navmenu {
+      display: flex;
+      align-items: center;
+    }
+
+    #header .navmenu ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    /* ── All nav links ── */
+    #header .navmenu ul li a {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.6) !important;
+      text-decoration: none;
+      padding: 7px 12px;
+      border-radius: 7px;
+      display: inline-block;
+      white-space: nowrap;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    #header .navmenu ul li a:hover,
+    #header .navmenu ul li a.active {
+      color: #ffffff !important;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ── Logout link — red tint to stand out ── */
+    #header .navmenu ul li a[href="/logout_view/"] {
+      color: rgba(255, 90, 90, 0.85) !important;
+      background: rgba(255, 60, 60, 0.08);
+    }
+
+    #header .navmenu ul li a[href="/logout_view/"]:hover {
+      color: #ff5a5a !important;
+      background: rgba(255, 60, 60, 0.18);
+    }
+
+    /* ── Divider between nav groups ── */
+    #header .navmenu ul li.nav-divider {
+      width: 1px;
+      height: 18px;
+      background: rgba(255,255,255,0.12);
+      margin: 0 6px;
+      pointer-events: none;
+    }
+
+    /* ── Mobile toggle ── */
+    #header .mobile-nav-toggle {
+      color: #ffffff !important;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: none;
+      margin-left: 10px;
+    }
+
+    @media (max-width: 1199px) {
+      #header .mobile-nav-toggle {
+        display: inline-block;
+      }
+      #header .navmenu ul {
+        display: none;
+      }
+      #header .container-fluid {
+        padding: 13px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- <img src="/static/assets/img/logo.webp" alt=""> -->
+        <h1 class="sitename">Arogyam 360</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="/trainer/" class="active">Home</a></li>
+          <li><a href="/trainer_gymowner/">Owner</a></li>
+          <li><a href="/trainer_view_users/">Users</a></li>
+          <li><a href="/trainer_workoutlevel/">Workout Level</a></li>
+          <li><a href="/trainer_workoutroutine/">Workout Routine</a></li>
+          <li><a href="/trainer_dailyexerciseplan/">Daily Exercise</a></li>
+          <li><a href="/trainer_complaint/">Complaint</a></li>
+          <li><a href="/trainer_view_feedback/">Feedback</a></li>
+          <li><a href="/trainer_view_notifications/">Notifications</a></li>
+          <li class="nav-divider"></li>
+          <li><a href="/logout_view/">Logout</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+

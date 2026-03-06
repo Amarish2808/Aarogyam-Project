@@ -1,0 +1,549 @@
+{#{% include 'trainer_header.html' %}#}
+{##}
+{#<style>#}
+{##}
+{#/* Page */#}
+{#.edit-plan-page{#}
+{#    padding:110px 0 80px;#}
+{#    background:#f4f6f9;#}
+{#    min-height:100vh;#}
+{#    font-family:'Poppins',sans-serif;#}
+{#}#}
+{##}
+{#/* Card */#}
+{#.edit-card{#}
+{#    max-width:640px;#}
+{#    margin:auto;#}
+{#    background:#fff;#}
+{#    border-radius:18px;#}
+{#    box-shadow:0 10px 35px rgba(0,0,0,0.08);#}
+{#    overflow:hidden;#}
+{#}#}
+{##}
+{#/* Header */#}
+{#.edit-header{#}
+{#    background:linear-gradient(135deg,#111,#2f2f2f);#}
+{#    color:#fff;#}
+{#    padding:24px 30px;#}
+{#    font-weight:700;#}
+{#    font-size:1.2rem;#}
+{#}#}
+{##}
+{#/* Body */#}
+{#.edit-body{#}
+{#    padding:28px 30px 32px 30px;#}
+{#}#}
+{##}
+{#/* Inputs */#}
+{#select,textarea{#}
+{#    width:100%;#}
+{#    padding:.75rem 1rem;#}
+{#    margin-bottom:16px;#}
+{#    border-radius:10px;#}
+{#    border:1.5px solid #e2e8f0;#}
+{#    background:#f8fafc;#}
+{#    font-family:'Poppins',sans-serif;#}
+{#    font-size:.9rem;#}
+{#    outline:none;#}
+{#    transition:.2s;#}
+{#}#}
+{##}
+{#select:focus,textarea:focus{#}
+{#    border-color:#111;#}
+{#    background:#fff;#}
+{#    box-shadow:0 0 0 3px rgba(17,17,17,.08);#}
+{#}#}
+{##}
+{#textarea{#}
+{#    resize:none;#}
+{#    height:130px;#}
+{#}#}
+{##}
+{#/* Button */#}
+{#button{#}
+{#    width:100%;#}
+{#    padding:.85rem;#}
+{#    background:linear-gradient(135deg,#16a34a,#15803d);#}
+{#    color:#fff;#}
+{#    border:none;#}
+{#    border-radius:10px;#}
+{#    font-weight:600;#}
+{#    cursor:pointer;#}
+{#    transition:.25s;#}
+{#}#}
+{##}
+{#button:hover{#}
+{#    transform:translateY(-2px);#}
+{#    box-shadow:0 8px 24px rgba(22,163,74,.25);#}
+{#}#}
+{##}
+{#</style>#}
+{##}
+{##}
+{#<div class="edit-plan-page">#}
+{##}
+{#<div class="edit-card">#}
+{##}
+{#    <div class="edit-header">#}
+{#        Edit Exercise Plan#}
+{#    </div>#}
+{##}
+{#    <div class="edit-body">#}
+{##}
+{#        <form method="post">#}
+{#            {% csrf_token %}#}
+{##}
+{#            <select name="level" required>#}
+{#                {% for level in workoutlevels %}#}
+{#                    <option value="{{ level.id }}" {% if plan.WORKOUTLEVEL.id == level.id %}selected{% endif %}>#}
+{#                        {{ level.title }}#}
+{#                    </option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{##}
+{#            <select name="date" required>#}
+{#                <option value="Monday" {% if plan.date == "Monday" %}selected{% endif %}>Monday</option>#}
+{#                <option value="Tuesday" {% if plan.date == "Tuesday" %}selected{% endif %}>Tuesday</option>#}
+{#                <option value="Wednesday" {% if plan.date == "Wednesday" %}selected{% endif %}>Wednesday</option>#}
+{#                <option value="Thursday" {% if plan.date == "Thursday" %}selected{% endif %}>Thursday</option>#}
+{#                <option value="Friday" {% if plan.date == "Friday" %}selected{% endif %}>Friday</option>#}
+{#                <option value="Saturday" {% if plan.date == "Saturday" %}selected{% endif %}>Saturday</option>#}
+{#            </select>#}
+{##}
+{#            <textarea name="plantext" required>{{plan.plantext}}</textarea>#}
+{##}
+{#            <button type="submit">Update Plan</button>#}
+{#        </form>#}
+{##}
+{#    </div>#}
+{##}
+{#</div>#}
+{##}
+{#</div>#}
+{##}
+{#{% include 'trainer_footer.html' %}#}
+
+
+
+
+{% include 'trainer_header.html' %}
+
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#f4f6f9;
+    --white:#ffffff;
+    --dark:#111111;
+    --muted:#64748b;
+    --border:#e2e8f0;
+    --card-shadow:0 8px 40px rgba(0,0,0,0.09);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+body{ font-family:'DM Sans',sans-serif; }
+
+.edit-plan-page{
+    padding:100px 0 80px;
+    background:var(--bg);
+    min-height:100vh;
+}
+
+.container{
+    width:92%;
+    max-width:900px;
+    margin:auto;
+}
+
+/* ── Page Title ── */
+.page-top{ margin-bottom:2.2rem; }
+
+.page-top .eyebrow{
+    font-family:'Syne',sans-serif;
+    font-size:.72rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:3px;
+    color:var(--dark);
+    margin-bottom:.5rem;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.page-top .eyebrow::before{
+    content:'';
+    display:inline-block;
+    width:20px; height:2px;
+    background:var(--dark);
+    border-radius:2px;
+}
+
+.page-top h1{
+    font-family:'Syne',sans-serif;
+    font-size:2.2rem;
+    font-weight:800;
+    color:var(--dark);
+    line-height:1.1;
+}
+
+/* ── Card ── */
+.card{
+    background:var(--white);
+    border-radius:20px;
+    box-shadow:var(--card-shadow);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.9);
+    animation:fadeUp .4s ease both;
+}
+
+@keyframes fadeUp{
+    from{ opacity:0; transform:translateY(20px); }
+    to{   opacity:1; transform:translateY(0); }
+}
+
+.card-header{
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    color:#fff;
+    padding:18px 28px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Syne',sans-serif;
+    font-size:1rem;
+    font-weight:700;
+    letter-spacing:.3px;
+}
+
+.card-header .dot{
+    width:8px; height:8px;
+    border-radius:50%;
+    background:#fff;
+    opacity:.6;
+}
+
+.form-body{ padding:30px 32px; }
+
+/* ── Field Label ── */
+.field-label{
+    font-family:'Syne',sans-serif;
+    font-size:.7rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    color:var(--muted);
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.field-label span{
+    display:inline-block;
+    width:16px; height:2px;
+    background:var(--dark);
+    border-radius:2px;
+}
+
+.form-divider{
+    border:none;
+    border-top:1.5px solid #f1f5f9;
+    margin:4px 0 28px;
+}
+
+/* ── LEVEL PILLS ── */
+.level-group{
+    display:flex;
+    gap:10px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+}
+
+.level-btn{
+    flex:1 1 0;
+    min-width:120px;
+    padding:13px 16px;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:#fafbff;
+    font-family:'Syne',sans-serif;
+    font-size:.85rem;
+    font-weight:700;
+    color:var(--muted);
+    cursor:pointer;
+    transition:all .22s ease;
+    user-select:none;
+    text-align:center;
+}
+
+.level-btn:hover{
+    border-color:var(--dark);
+    color:var(--dark);
+    transform:translateY(-2px);
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
+}
+
+.level-btn.selected{
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    color:#fff;
+    border-color:transparent;
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+    transform:translateY(-2px);
+}
+
+/* ── 2-COLUMN LAYOUT ── */
+.form-columns{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:24px;
+    align-items:start;
+}
+
+@media(max-width:680px){
+    .form-columns{ grid-template-columns:1fr; }
+}
+
+/* ── DAY COLUMN ── */
+.day-group{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.day-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 16px;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:#fafbff;
+    font-family:'DM Sans',sans-serif;
+    font-size:.88rem;
+    font-weight:600;
+    color:#475569;
+    cursor:pointer;
+    transition:all .2s ease;
+    user-select:none;
+}
+
+.day-btn .day-abbr{
+    font-family:'Syne',sans-serif;
+    font-size:.72rem;
+    font-weight:800;
+    color:var(--dark);
+    background:rgba(0,0,0,.07);
+    border-radius:6px;
+    padding:3px 7px;
+    min-width:36px;
+    text-align:center;
+    transition:.2s;
+    letter-spacing:.5px;
+}
+
+.day-btn:hover{
+    border-color:var(--dark);
+    color:var(--dark);
+    transform:translateX(3px);
+    box-shadow:0 3px 14px rgba(0,0,0,.12);
+}
+
+.day-btn.selected{
+    background:linear-gradient(135deg,#111,#2d2d2d);
+    border-color:transparent;
+    color:#fff;
+    transform:translateX(3px);
+    box-shadow:0 5px 18px rgba(0,0,0,.22);
+}
+
+.day-btn.selected .day-abbr{
+    background:rgba(255,255,255,.15);
+    color:#fff;
+}
+
+/* ── RIGHT COLUMN ── */
+.fields-col{ display:flex; flex-direction:column; }
+
+.styled-textarea{
+    width:100%;
+    padding:.85rem 1.1rem;
+    border-radius:12px;
+    border:2px solid var(--border);
+    background:#fafbff;
+    font-family:'DM Sans',sans-serif;
+    font-size:.92rem;
+    font-weight:500;
+    color:var(--dark);
+    outline:none;
+    transition:all .2s;
+    resize:none;
+    height:220px;
+}
+
+.styled-textarea:focus{
+    border-color:var(--dark);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(0,0,0,.08);
+}
+
+/* ── Actions ── */
+.submit-wrap{
+    margin-top:28px;
+    display:flex;
+    justify-content:flex-end;
+    gap:12px;
+}
+
+.submit-btn{
+    padding:13px 40px;
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-family:'Syne',sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    transition:.25s;
+    letter-spacing:.5px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(22,163,74,.3);
+}
+
+.submit-btn .arrow{
+    font-size:1rem;
+    transition:transform .2s;
+}
+
+.submit-btn:hover .arrow{ transform:translateX(4px); }
+
+.cancel-btn{
+    padding:13px 28px;
+    background:#f1f5f9;
+    color:var(--muted);
+    border:none;
+    border-radius:12px;
+    font-family:'Syne',sans-serif;
+    font-weight:700;
+    font-size:.9rem;
+    cursor:pointer;
+    transition:.25s;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+}
+
+.cancel-btn:hover{
+    background:#e2e8f0;
+    color:var(--dark);
+}
+
+</style>
+
+
+<div class="edit-plan-page">
+<div class="container">
+
+    <div class="page-top">
+        <div class="eyebrow">Training</div>
+        <h1>Edit Exercise Plan</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="dot"></div>
+            Update Plan Details
+        </div>
+        <div class="form-body">
+
+            <form method="post" id="editPlanForm">
+                {% csrf_token %}
+                <input type="hidden" name="level" id="selectedLevel" value="{{ plan.WORKOUTLEVEL.id }}">
+                <input type="hidden" name="date"  id="selectedDay"   value="{{ plan.date }}">
+
+                <!-- LEVEL PILLS -->
+                <div class="field-label"><span></span> Workout Level</div>
+                <div class="level-group">
+                    {% for level in workoutlevels %}
+                    <div class="level-btn {% if plan.WORKOUTLEVEL.id == level.id %}selected{% endif %}"
+                         data-value="{{ level.id }}"
+                         onclick="selectLevel(this)">
+                        {{ level.title }}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <hr class="form-divider">
+
+                <!-- DAYS + PLAN TEXT -->
+                <div class="form-columns">
+
+                    <!-- LEFT: Days -->
+                    <div>
+                        <div class="field-label"><span></span> Select Day</div>
+                        <div class="day-group">
+                            <div class="day-btn {% if plan.date == 'Monday' %}selected{% endif %}"    data-value="Monday"    onclick="selectDay(this)"><span class="day-abbr">MON</span> Monday</div>
+                            <div class="day-btn {% if plan.date == 'Tuesday' %}selected{% endif %}"   data-value="Tuesday"   onclick="selectDay(this)"><span class="day-abbr">TUE</span> Tuesday</div>
+                            <div class="day-btn {% if plan.date == 'Wednesday' %}selected{% endif %}" data-value="Wednesday" onclick="selectDay(this)"><span class="day-abbr">WED</span> Wednesday</div>
+                            <div class="day-btn {% if plan.date == 'Thursday' %}selected{% endif %}"  data-value="Thursday"  onclick="selectDay(this)"><span class="day-abbr">THU</span> Thursday</div>
+                            <div class="day-btn {% if plan.date == 'Friday' %}selected{% endif %}"    data-value="Friday"    onclick="selectDay(this)"><span class="day-abbr">FRI</span> Friday</div>
+                            <div class="day-btn {% if plan.date == 'Saturday' %}selected{% endif %}"  data-value="Saturday"  onclick="selectDay(this)"><span class="day-abbr">SAT</span> Saturday</div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Plan Text -->
+                    <div class="fields-col">
+                        <div class="field-label"><span></span> Exercise Plan Details</div>
+                        <textarea class="styled-textarea" name="plantext" required>{{ plan.plantext }}</textarea>
+                    </div>
+
+                </div>
+
+                <div class="submit-wrap">
+                    <a href="/trainer_dailyexerciseplan/" class="cancel-btn">Cancel</a>
+                    <button type="submit" class="submit-btn">
+                        <span>Update Plan</span>
+                        <span class="arrow">→</span>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+</div>
+
+<script>
+function selectLevel(el){
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('selectedLevel').value = el.dataset.value;
+}
+
+function selectDay(el){
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('selectedDay').value = el.dataset.value;
+}
+
+document.getElementById('editPlanForm').addEventListener('submit', function(e){
+    if(!document.getElementById('selectedLevel').value){
+        alert('Please select a Workout Level.');
+        e.preventDefault(); return;
+    }
+    if(!document.getElementById('selectedDay').value){
+        alert('Please select a Day.');
+        e.preventDefault(); return;
+    }
+});
+</script>
+
+{% include 'trainer_footer.html' %}

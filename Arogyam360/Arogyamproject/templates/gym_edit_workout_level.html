@@ -1,0 +1,378 @@
+{% include 'gymowner_header.html' %}
+
+<style>
+  .edit-page {
+    padding: 120px 0 80px;
+    background: #f4f6f9;
+    min-height: 100vh;
+  }
+
+  .edit-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ── Section title ── */
+  .section-label {
+    display: inline-block;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 0.4rem;
+  }
+
+  .section-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.4rem;
+  }
+
+  .section-divider {
+    width: 48px;
+    height: 3px;
+    background: #111;
+    border-radius: 2px;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .card-hero {
+    background: linear-gradient(135deg, #111 0%, #333 100%);
+    padding: 1.75rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+
+  .card-hero-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .card-hero-icon {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .card-hero-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 0.15rem;
+  }
+
+  .card-hero-sub {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .card-body { padding: 2rem; }
+
+  /* ── Form ── */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: #64748b;
+  }
+
+  .form-label i { font-size: 0.8rem; }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 0.68rem 1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.87rem;
+    color: #1e293b;
+    background: #f8fafc;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    box-sizing: border-box;
+  }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 130px;
+    line-height: 1.6;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: #111;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(17,17,17,0.08);
+  }
+
+  .form-input.is-error,
+  .form-textarea.is-error {
+    border-color: #ef4444;
+    background: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+  }
+
+  .form-input.is-ok,
+  .form-textarea.is-ok {
+    border-color: #22c55e;
+    background: #f0fdf4;
+  }
+
+  .field-error {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.71rem;
+    color: #ef4444;
+    font-weight: 500;
+    display: none;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .field-error.visible { display: flex; }
+
+  /* Divider */
+  .form-divider {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  /* Actions */
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-update {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.72rem 2rem;
+    background: linear-gradient(135deg, #111 0%, #2d2d2d 100%);
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btn-update:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  }
+
+  .btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.72rem 1.5rem;
+    background: #f1f5f9;
+    color: #64748b;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btn-cancel:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+    transform: translateY(-2px);
+  }
+
+  /* ── Toast ── */
+  .toast-msg {
+    position: fixed; top: 90px; right: 24px;
+    background: #1e293b; color: #fff;
+    font-family: 'Poppins', sans-serif; font-size: 0.83rem; font-weight: 500;
+    padding: 0.85rem 1.4rem; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 0.6rem;
+    z-index: 9999; transform: translateX(120%);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .toast-msg.show { transform: translateX(0); }
+  .toast-msg .t-icon { color: #ef4444; }
+
+  /* ── Mobile ── */
+  @media (max-width: 600px) {
+    .edit-page { padding: 100px 0 60px; }
+    .section-heading { font-size: 1.5rem; }
+    .card-body { padding: 1.5rem; }
+    .form-actions { flex-direction: column; align-items: stretch; }
+    .btn-update, .btn-cancel { justify-content: center; }
+  }
+</style>
+
+<div class="toast-msg" id="toast">
+  <i class="bi bi-exclamation-circle-fill t-icon"></i>
+  <span id="toastMsg">Please fix the errors before submitting.</span>
+</div>
+
+<div class="edit-page">
+  <div class="edit-container">
+
+    <div data-aos="fade-up" data-aos-delay="100">
+      <span class="section-label">Training</span>
+      <h2 class="section-heading">Edit Workout Level</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div class="card" data-aos="fade-up" data-aos-delay="150">
+      <div class="card-hero">
+        <div class="card-hero-inner">
+          <div class="card-hero-icon">
+            <i class="bi bi-pencil-square"></i>
+          </div>
+          <div>
+            <div class="card-hero-title">Update — {{ workout.title }}</div>
+            <div class="card-hero-sub">Edit the details below and save</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <form method="POST" id="editForm" novalidate>
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label class="form-label" for="e_title">
+              <i class="bi bi-lightning"></i> Workout Title
+            </label>
+            <input type="text" id="e_title" name="title"
+                   value="{{ workout.title }}" required class="form-input">
+            <span class="field-error" id="titleErr">
+              <i class="bi bi-x-circle"></i> Title is required.
+            </span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="e_desc">
+              <i class="bi bi-card-text"></i> Description
+            </label>
+            <textarea id="e_desc" name="description"
+                      required class="form-textarea">{{ workout.description }}</textarea>
+            <span class="field-error" id="descErr">
+              <i class="bi bi-x-circle"></i> Description is required.
+            </span>
+          </div>
+
+          <hr class="form-divider">
+
+          <div class="form-actions">
+            <button type="submit" class="btn-update">
+              <i class="bi bi-check-lg"></i> Update
+            </button>
+            <a href="/gym_add_workout_level/" class="btn-cancel">
+              <i class="bi bi-arrow-left"></i> Cancel
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% include 'public_footer.html' %}
+
+<script>
+  function showToast(msg) {
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  const rules = {
+    e_title: { regex: /\S+/, errId: 'titleErr' },
+    e_desc:  { regex: /\S+/, errId: 'descErr'  },
+  };
+
+  function setError(input, errId, show) {
+    input.classList.toggle('is-error', show);
+    input.classList.toggle('is-ok', !show);
+    document.getElementById(errId).classList.toggle('visible', show);
+  }
+
+  function validateField(id) {
+    const rule = rules[id];
+    const el   = document.getElementById(id);
+    if (!rule || !el) return true;
+    const ok = rule.regex.test(el.value.trim());
+    setError(el, rule.errId, !ok);
+    return ok;
+  }
+
+  Object.keys(rules).forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('blur', () => validateField(id));
+    el.addEventListener('input', () => { if (el.classList.contains('is-error')) validateField(id); });
+  });
+
+  document.getElementById('editForm')?.addEventListener('submit', e => {
+    const fails = Object.keys(rules).filter(id => !validateField(id));
+    if (fails.length) {
+      e.preventDefault();
+      showToast('Please fill in all required fields.');
+      document.getElementById(fails[0])?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+</script>
