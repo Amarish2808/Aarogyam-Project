@@ -14,9 +14,6 @@ Arogyam 360 is a comprehensive, hybrid health platform designed to bridge the ga
 - **Personalized Nutrition**: Intelligent meal planning based on user goals (weight loss, muscle gain, etc.).
 - **ML Insights**: Analyzes user progress and adapts diet recommendations dynamically.
 
-### 3. Real-Time Health Monitoring
-- **Android Integration**: Seamlessly pulls data from mobile sensors and wearables.
-- **Health Metrics**: Real-time tracking of vitals, activity levels, and workout consistency.
 
 ## 🛠 Tech Stack
 
