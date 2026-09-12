@@ -1,4 +1,3 @@
-# Aarogyam_project
 # Arogyam 360 — Intelligent Health Ecosystem 🏋️‍♂️
 
 Arogyam 360 is a comprehensive, hybrid health platform designed to bridge the gap between gym management and personal wellness. By integrating real-time health monitoring with AI-driven insights, it empowers both fitness facility owners and members to achieve superior health outcomes.
